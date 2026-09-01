@@ -69,6 +69,8 @@
           #95d0ff 60% 80%, #c7abff 80% 100%);
       overflow: hidden;
       box-shadow: 4px 4px 0 #00000020;
+      z-index: 0;
+      pointer-events: none;
     }
 
     .rainbow::after {
@@ -93,7 +95,8 @@
       border-radius: 50px;
       box-shadow: 4px 4px 0 #00000018;
       animation: bob 4.5s ease-in-out infinite;
-      z-index: 2;
+      z-index: 0;
+      pointer-events: none;
     }
 
     .smile-cloud::before,
@@ -202,6 +205,7 @@
       position: fixed;
       inset: clamp(12px, 3vw, 28px);
       width: min(920px, 95vw);
+      max-height: 90vh;
       margin: auto;
       z-index: 50;
       box-shadow: 0 15px 45px #00000045;
@@ -216,6 +220,32 @@
       display: grid;
       gap: 8px;
       margin-top: 10px;
+    }
+
+    .camera-toolbar {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .layout-select {
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      background: #fffce9;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: .96rem;
+      padding: 10px 8px;
+      width: 100%;
+    }
+
+    .camera-status {
+      margin-top: 8px;
+      background: #fff;
+      border: 3px dashed #ffc3dd;
+      border-radius: 14px;
+      padding: 8px;
     }
 
     .photo-strip {
@@ -319,27 +349,27 @@
       background: radial-gradient(circle at 50% -10%, #fff, #ffd5e2);
       border: 4px solid var(--ink);
       border-radius: 18px;
-      padding: 50px 10px 16px;
+      padding: 24px 10px 16px;
       position: relative;
       overflow: visible;
-      min-height: 350px;
+      min-height: 290px;
     }
 
-    .table {
+    .cake-glow {
       position: absolute;
-      bottom: -40px;
+      top: 24px;
       left: 50%;
       transform: translateX(-50%);
-      width: 115%;
-      height: 130px;
-      background: #ffb6cb;
-      border: 4px solid var(--ink);
+      width: min(280px, 80%);
+      height: 210px;
+      background: radial-gradient(circle at 50% 20%, #fff6be, #ffd4ea 70%, #ffd4ea00 72%);
       border-radius: 50%;
+      z-index: 1;
     }
 
     .cake {
       position: relative;
-      width: min(300px, 92%);
+      width: min(260px, 84%);
       margin: 0 auto;
       z-index: 2;
     }
@@ -353,17 +383,10 @@
       box-shadow: inset 0 -12px 0 #d09a6a;
     }
 
-    .tier.bottom {
+    .tier.main {
       width: 100%;
-      height: 110px;
+      height: 120px;
       border-radius: 18px;
-    }
-
-    .tier.top {
-      width: 72%;
-      height: 85px;
-      margin-bottom: -4px;
-      z-index: 4;
     }
 
     .icing {
@@ -397,11 +420,6 @@
       gap: 12px;
       align-items: flex-end;
       z-index: 6;
-    }
-
-    .candles.lower {
-      top: -34px;
-      gap: 20px;
     }
 
     .candle {
@@ -487,9 +505,8 @@
     }
 
     .wish-cards {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 10px;
     }
 
@@ -515,7 +532,7 @@
       position: fixed;
       bottom: -120px;
       width: 60px;
-      z-index: 1;
+      z-index: 0;
       animation: floatUp linear infinite;
       pointer-events: none;
     }
@@ -612,17 +629,18 @@
       .cloud-1 { left: -30px; top: 184px; transform: scale(.8); }
       .page { padding-bottom: 110px; }
       .footer-ribbon { justify-content: center; }
-      .cake-stage { min-height: 330px; padding-top: 46px; }
+      .cake-stage { min-height: 270px; }
       .zoomable-target.is-zoomed { width: 96vw; }
+      .camera-toolbar { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 600px) {
       .header-banner { margin-bottom: 16px; }
       .main-wrap { padding: 12px; gap: 14px; }
       .camera-card, .cake-card { padding: 10px; }
-      .cake-stage { min-height: 310px; padding-top: 42px; }
-      .tier.bottom { height: 96px; }
-      .tier.top { height: 78px; }
+      .camera-toolbar { grid-template-columns: 1fr; }
+      .cake-stage { min-height: 250px; }
+      .tier.main { height: 100px; }
     }
   </style>
 </head>
@@ -652,20 +670,36 @@
         </div>
         <div class="camera-actions">
           <button class="cute-btn" id="scanBtn">Scan Muka Dulu! 📸</button>
-          <button class="cute-btn" id="captureBtn" style="background:linear-gradient(90deg,#c8ffe4,#ffd6f0)">Foto Booth &amp; Simpan 💾</button>
+          <button class="cute-btn" id="captureBtn" style="background:linear-gradient(90deg,#c8ffe4,#ffd6f0)">Buat Foto Twibbon &amp; Simpan 💾</button>
         </div>
-        <p class="scan-loading" id="scanLoading"></p>
-        <div class="scan-stamp" id="scanStamp">100% LOLOS UMUR 23 &amp; MAKIN CANTIK! ✨</div>
+        <div class="camera-toolbar">
+          <button class="cute-btn" id="zoomCameraBtn" style="margin-top:0;background:linear-gradient(90deg,#d5e4ff,#ffe7f7)">Perbesar Kamera 🔍</button>
+          <select class="layout-select" id="layoutSelect" aria-label="Pilih layout twibbon">
+            <option value="classic">Classic Portrait</option>
+            <option value="triple">3 Lapis Story</option>
+            <option value="duo">Duo Frame Party</option>
+          </select>
+          <select class="layout-select" id="themeSelect" aria-label="Pilih tema twibbon">
+            <option value="candy">Candy Cute</option>
+            <option value="royal">Royal Gold</option>
+            <option value="men">Men Birthday Special</option>
+          </select>
+        </div>
+        <div class="camera-status">
+          <p class="scan-loading" id="scanLoading"></p>
+          <div class="scan-stamp" id="scanStamp">100% LOLOS UMUR 23 &amp; MAKIN CANTIK! ✨</div>
+          <div class="permission-note" id="cameraNote">Aktifkan kamera lalu pilih layout &amp; tema twibbon favorit 💖</div>
+        </div>
         <div class="photo-strip" id="photoStrip"></div>
         <canvas id="captureCanvas" hidden></canvas>
-        <div class="permission-note" id="cameraNote">Izinkan kamera lalu klik kamera untuk perbesar/perkecil 💖</div>
       </div>
 
       <div class="cake-card">
         <h2 class="panel-title">Kue Ulang Tahun 🎂</h2>
         <div class="cake-stage zoomable-target" id="cakeStage" role="button" tabindex="0" aria-label="Perbesar kue">
+          <div class="cake-glow"></div>
           <div class="cake">
-            <div class="tier top">
+            <div class="tier main">
               <div class="icing"></div>
               <div class="candles">
                 <div class="candle num"><span>2</span><div class="flame"></div><div class="smoke"></div></div>
@@ -674,21 +708,12 @@
                 <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
               </div>
             </div>
-            <div class="tier bottom">
-              <div class="icing"></div>
-              <div class="candles lower">
-                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
-                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
-                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
-                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
-              </div>
-            </div>
           </div>
-          <div class="table"></div>
         </div>
+        <button class="cute-btn" id="zoomCakeBtn" style="background:linear-gradient(90deg,#ffe9b3,#ffd8ef)">Perbesar Kue 🔎</button>
         <button class="cute-btn" id="blowBtn">Tiup Lilin! (Fyuuu~ 💨)</button>
         <button class="cute-btn" id="micBtn" style="background:linear-gradient(90deg,#c8ffe4,#cbe3ff)">Aktifkan Deteksi Tiupan Mic 🎙️</button>
-        <div class="permission-note">Klik area kuenya dulu kalau mau lihat penuh sebelum tiup 🎂</div>
+        <div class="permission-note">Klik tombol Perbesar Kue kalau mau lihat full sebelum tiup 🎂</div>
         <div class="permission-note" id="micNote"> tiup micnya untuk memadamkan lilinnya</div>
         <div class="celebrate-text" id="celebrateText"></div>
       </div>
@@ -731,6 +756,10 @@
     const cameraNote = document.getElementById('cameraNote');
     const scanBtn = document.getElementById('scanBtn');
     const captureBtn = document.getElementById('captureBtn');
+    const zoomCameraBtn = document.getElementById('zoomCameraBtn');
+    const zoomCakeBtn = document.getElementById('zoomCakeBtn');
+    const layoutSelect = document.getElementById('layoutSelect');
+    const themeSelect = document.getElementById('themeSelect');
     const photoStrip = document.getElementById('photoStrip');
     const captureCanvas = document.getElementById('captureCanvas');
     const videoShell = document.getElementById('videoShell');
@@ -757,8 +786,14 @@
     let bgmOn = false;
     const zoomableTargets = [videoShell, cakeStage];
 
+    function syncZoomButtons() {
+      zoomCameraBtn.textContent = videoShell.classList.contains('is-zoomed') ? 'Tutup Kamera ✖️' : 'Perbesar Kamera 🔍';
+      zoomCakeBtn.textContent = cakeStage.classList.contains('is-zoomed') ? 'Tutup Kue ✖️' : 'Perbesar Kue 🔎';
+    }
+
     function updateModalState() {
       document.body.classList.toggle('modal-open', zoomableTargets.some(target => target.classList.contains('is-zoomed')));
+      syncZoomButtons();
     }
 
     function toggleZoom(target) {
@@ -782,45 +817,186 @@
     function savePhotoFile(src) {
       const link = document.createElement('a');
       link.href = src;
-      link.download = `photobooth-faeruza-${Date.now()}.png`;
+      link.download = `twibbon-faeruza-${layoutSelect.value}-${themeSelect.value}-${Date.now()}.png`;
       link.click();
     }
 
+    function roundRect(ctx, x, y, width, height, radius) {
+      const r = Math.min(radius, width / 2, height / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + width, y, x + width, y + height, r);
+      ctx.arcTo(x + width, y + height, x, y + height, r);
+      ctx.arcTo(x, y + height, x, y, r);
+      ctx.arcTo(x, y, x + width, y, r);
+      ctx.closePath();
+    }
+
+    function drawSourceFrame(ctx, x, y, width, height) {
+      roundRect(ctx, x, y, width, height, 24);
+      ctx.save();
+      ctx.clip();
+      if (!webcam.hidden && webcam.srcObject) {
+        const sourceWidth = webcam.videoWidth || 720;
+        const sourceHeight = webcam.videoHeight || 540;
+        const sourceRatio = sourceWidth / sourceHeight;
+        const targetRatio = width / height;
+        let sx = 0;
+        let sy = 0;
+        let sw = sourceWidth;
+        let sh = sourceHeight;
+        if (sourceRatio > targetRatio) {
+          sw = sourceHeight * targetRatio;
+          sx = (sourceWidth - sw) / 2;
+        } else {
+          sh = sourceWidth / targetRatio;
+          sy = (sourceHeight - sh) / 2;
+        }
+        ctx.translate(x + width, y);
+        ctx.scale(-1, 1);
+        ctx.drawImage(webcam, sx, sy, sw, sh, 0, 0, width, height);
+      } else {
+        const bg = ctx.createLinearGradient(x, y, x + width, y + height);
+        bg.addColorStop(0, '#7c8bd9');
+        bg.addColorStop(1, '#b05fbf');
+        ctx.fillStyle = bg;
+        ctx.fillRect(x, y, width, height);
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = 'center';
+        ctx.font = `700 ${Math.max(24, width * 0.08)}px Fredoka`;
+        ctx.fillText('Avatar Mode ✨', x + width / 2, y + height / 2);
+      }
+      ctx.restore();
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = '#fff';
+      roundRect(ctx, x, y, width, height, 24);
+      ctx.stroke();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#222';
+      roundRect(ctx, x + 2, y + 2, width - 4, height - 4, 22);
+      ctx.stroke();
+    }
+
+    function getThemeConfig(theme) {
+      if (theme === 'royal') {
+        return {
+          stops: ['#fff3cc', '#ffdba1', '#dbe9ff'],
+          bubble: '#ffffff50',
+          title: '#5d3b00',
+          badge: '#8c5b00',
+          border: '#b57a00',
+          sticker: '👑',
+          subtitle: 'Royal Gold Birthday'
+        };
+      }
+      if (theme === 'men') {
+        return {
+          stops: ['#d9ecff', '#c9d2ff', '#c3ffd8'],
+          bubble: '#ffffff45',
+          title: '#133f74',
+          badge: '#265aa8',
+          border: '#1b3e70',
+          sticker: '🎯',
+          subtitle: 'Men Birthday Special'
+        };
+      }
+      return {
+        stops: ['#ffe3f2', '#fff6d9', '#dff2ff'],
+        bubble: '#ffffff80',
+        title: '#222',
+        badge: '#ff4e95',
+        border: '#ff90c2',
+        sticker: '🎀',
+        subtitle: 'Candy Cute Birthday'
+      };
+    }
+
+    function drawBadgeText(ctx, width, height, text, themeConfig) {
+      ctx.fillStyle = '#fffef6';
+      roundRect(ctx, 70, height - 170, width - 140, 90, 22);
+      ctx.fill();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#222';
+      roundRect(ctx, 70, height - 170, width - 140, 90, 22);
+      ctx.stroke();
+      ctx.fillStyle = themeConfig.badge;
+      ctx.font = '700 44px Fredoka';
+      ctx.textAlign = 'center';
+      ctx.fillText(text, width / 2, height - 112);
+    }
+
+    function drawTwibbonBackground(ctx, width, height, themeConfig) {
+      const bg = ctx.createLinearGradient(0, 0, width, height);
+      bg.addColorStop(0, themeConfig.stops[0]);
+      bg.addColorStop(0.5, themeConfig.stops[1]);
+      bg.addColorStop(1, themeConfig.stops[2]);
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = themeConfig.bubble;
+      for (let i = 0; i < 14; i++) {
+        const x = (i * 121) % width;
+        const y = (i * 197) % height;
+        ctx.beginPath();
+        ctx.arc(x, y, 24 + (i % 3) * 12, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawTwibbonDecor(ctx, width, height, themeConfig) {
+      ctx.lineWidth = 14;
+      ctx.strokeStyle = themeConfig.border;
+      roundRect(ctx, 18, 18, width - 36, height - 36, 38);
+      ctx.stroke();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#222';
+      roundRect(ctx, 26, 26, width - 52, height - 52, 32);
+      ctx.stroke();
+
+      ctx.font = '700 58px Fredoka';
+      ctx.fillStyle = themeConfig.title;
+      ctx.textAlign = 'center';
+      ctx.fillText(`${themeConfig.sticker} ${themeConfig.subtitle} ${themeConfig.sticker}`, width / 2, 132);
+    }
+
     function capturePhotoBooth() {
-      const width = webcam.videoWidth || 720;
-      const height = webcam.videoHeight || 540;
+      const layout = layoutSelect.value;
+      const theme = themeSelect.value;
+      const themeConfig = getThemeConfig(theme);
+      const width = 1080;
+      const height = 1350;
       captureCanvas.width = width;
       captureCanvas.height = height;
       const ctx = captureCanvas.getContext('2d');
 
-      if (!webcam.hidden && webcam.srcObject) {
-        ctx.save();
-        ctx.translate(width, 0);
-        ctx.scale(-1, 1);
-        ctx.drawImage(webcam, 0, 0, width, height);
-        ctx.restore();
+      drawTwibbonBackground(ctx, width, height, themeConfig);
+      drawTwibbonDecor(ctx, width, height, themeConfig);
+      ctx.fillStyle = themeConfig.title;
+      ctx.font = '700 50px Fredoka';
+      ctx.textAlign = 'center';
+      ctx.fillText('HAPPY BIRTHDAY FAERUZA 🎉', width / 2, 208);
+
+      if (layout === 'triple') {
+        drawSourceFrame(ctx, 170, 240, 740, 260);
+        drawSourceFrame(ctx, 130, 530, 820, 260);
+        drawSourceFrame(ctx, 170, 820, 740, 260);
+        drawBadgeText(ctx, width, height, '3 Lapis Celebration ✨', themeConfig);
+      } else if (layout === 'duo') {
+        drawSourceFrame(ctx, 80, 260, 440, 700);
+        drawSourceFrame(ctx, 560, 260, 440, 700);
+        drawBadgeText(ctx, width, height, 'Duo Frame Party 💕', themeConfig);
       } else {
-        const bg = ctx.createLinearGradient(0, 0, width, height);
-        bg.addColorStop(0, '#7c8bd9');
-        bg.addColorStop(1, '#b05fbf');
-        ctx.fillStyle = bg;
-        ctx.fillRect(0, 0, width, height);
-        ctx.fillStyle = '#fff';
-        ctx.font = `700 ${Math.max(24, width * 0.05)}px Fredoka`;
-        ctx.textAlign = 'center';
-        ctx.fillText('Mode Avatar Aktif ✨', width / 2, height / 2);
+        drawSourceFrame(ctx, 130, 250, 820, 850);
+        drawBadgeText(ctx, width, height, 'Classic Twibbon 🌟', themeConfig);
       }
 
-      ctx.fillStyle = '#fff8';
-      ctx.fillRect(14, 14, width - 28, 60);
       ctx.fillStyle = '#222';
-      ctx.font = `700 ${Math.max(18, width * 0.03)}px Fredoka`;
-      ctx.fillText('SCAN + PHOTOBOOTH 🎉', width / 2, 54);
+      ctx.font = '600 34px Fredoka';
+      ctx.fillText('#FAERUZA_23 #BirthdayVibes', width / 2, height - 44);
 
       const imageData = captureCanvas.toDataURL('image/png');
       createPhotoThumb(imageData);
       savePhotoFile(imageData);
-      scanLoading.textContent = 'Foto booth tersimpan ke file ✅';
+      scanLoading.textContent = 'Twibbon berhasil disimpan ✅';
     }
 
     async function initCamera() {
@@ -833,10 +1009,16 @@
         webcam.srcObject = camStream;
         webcam.hidden = false;
         avatarFallback.hidden = true;
-        cameraNote.textContent = 'Kamera siap! Waktunya scan muka super gemoy 💖';
+        cameraNote.textContent = 'Kamera siap! Pilih layout + tema twibbon lalu ambil foto 💖';
       } catch (error) {
         cameraNote.textContent = 'Kamera ditolak/terkunci. Tenang, avatar tetap bisa dipakai untuk scan 🎀';
       }
+    }
+
+    function updateTwibbonHint() {
+      const layoutLabel = layoutSelect.options[layoutSelect.selectedIndex]?.textContent || 'layout';
+      const themeLabel = themeSelect.options[themeSelect.selectedIndex]?.textContent || 'tema';
+      cameraNote.textContent = `Siap bikin twibbon: ${layoutLabel} • ${themeLabel} 💝`;
     }
 
     function playChime() {
@@ -986,6 +1168,10 @@
 
     scanBtn.addEventListener('click', runScan);
     captureBtn.addEventListener('click', capturePhotoBooth);
+    zoomCameraBtn.addEventListener('click', () => toggleZoom(videoShell));
+    zoomCakeBtn.addEventListener('click', () => toggleZoom(cakeStage));
+    layoutSelect.addEventListener('change', updateTwibbonHint);
+    themeSelect.addEventListener('change', updateTwibbonHint);
     blowBtn.addEventListener('click', extinguishCandles);
     micBtn.addEventListener('click', enableMicBlowDetection);
     bgmBtn.addEventListener('click', toggleBgm);
@@ -1019,6 +1205,8 @@
     });
 
     initCamera();
+    syncZoomButtons();
+    updateTwibbonHint();
   </script>
 </body>
 </html>
