@@ -31,6 +31,7 @@
         radial-gradient(circle at 95% 85%, #ffd8f0 0, transparent 35%),
         linear-gradient(160deg, #fffef7, #ffeef8 40%, #eef9ff);
       overflow-x: hidden;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect x='5' y='12' width='22' height='15' rx='3' fill='%23ff77b5' stroke='%23222' stroke-width='2'/%3E%3Crect x='5' y='9' width='22' height='5' fill='%23ffe86f' stroke='%23222' stroke-width='2'/%3E%3Cpath d='M16 7c-4-4-8-2-8 2 0 3 4 4 8 1 4 3 8 2 8-1 0-4-4-6-8-2z' fill='%2397deff' stroke='%23222' stroke-width='2'/%3E%3Cline x1='16' y1='9' x2='16' y2='27' stroke='%23222' stroke-width='2'/%3E%3C/svg%3E") 6 2, auto;
     }
 
     .page {
@@ -192,6 +193,48 @@
       place-items: center;
     }
 
+    .zoomable-target {
+      transition: transform .25s ease, box-shadow .25s ease;
+      cursor: zoom-in;
+    }
+
+    .zoomable-target.is-zoomed {
+      position: fixed;
+      inset: clamp(12px, 3vw, 28px);
+      width: min(920px, 95vw);
+      margin: auto;
+      z-index: 50;
+      box-shadow: 0 15px 45px #00000045;
+      cursor: zoom-out;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    .camera-actions {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .photo-strip {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 8px;
+    }
+
+    .photo-thumb {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 2px 2px 0 #00000025;
+    }
+
     video, .avatar-fallback {
       width: 100%;
       height: 100%;
@@ -276,10 +319,10 @@
       background: radial-gradient(circle at 50% -10%, #fff, #ffd5e2);
       border: 4px solid var(--ink);
       border-radius: 18px;
-      padding: 24px 8px 16px;
+      padding: 50px 10px 16px;
       position: relative;
-      overflow: hidden;
-      min-height: 310px;
+      overflow: visible;
+      min-height: 350px;
     }
 
     .table {
@@ -349,11 +392,16 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      top: -48px;
+      top: -40px;
       display: flex;
       gap: 12px;
       align-items: flex-end;
       z-index: 6;
+    }
+
+    .candles.lower {
+      top: -34px;
+      gap: 20px;
     }
 
     .candle {
@@ -564,6 +612,17 @@
       .cloud-1 { left: -30px; top: 184px; transform: scale(.8); }
       .page { padding-bottom: 110px; }
       .footer-ribbon { justify-content: center; }
+      .cake-stage { min-height: 330px; padding-top: 46px; }
+      .zoomable-target.is-zoomed { width: 96vw; }
+    }
+
+    @media (max-width: 600px) {
+      .header-banner { margin-bottom: 16px; }
+      .main-wrap { padding: 12px; gap: 14px; }
+      .camera-card, .cake-card { padding: 10px; }
+      .cake-stage { min-height: 310px; padding-top: 42px; }
+      .tier.bottom { height: 96px; }
+      .tier.top { height: 78px; }
     }
   </style>
 </head>
@@ -585,21 +644,26 @@
             <span>📷 Cute Scanner</span>
             <div class="window-buttons"><span></span><span></span><span></span></div>
           </div>
-          <div class="video-shell" id="videoShell">
+          <div class="video-shell zoomable-target" id="videoShell" role="button" tabindex="0" aria-label="Perbesar kamera">
             <video id="webcam" autoplay playsinline muted hidden></video>
             <div class="avatar-fallback" id="avatarFallback">👧<br><small style="font-size:.9rem">Akses kamera belum aktif</small></div>
             <div class="scan-line" id="scanLine"></div>
           </div>
         </div>
-        <button class="cute-btn" id="scanBtn">Scan Muka Dulu! 📸</button>
+        <div class="camera-actions">
+          <button class="cute-btn" id="scanBtn">Scan Muka Dulu! 📸</button>
+          <button class="cute-btn" id="captureBtn" style="background:linear-gradient(90deg,#c8ffe4,#ffd6f0)">Foto Booth &amp; Simpan 💾</button>
+        </div>
         <p class="scan-loading" id="scanLoading"></p>
         <div class="scan-stamp" id="scanStamp">100% LOLOS UMUR 23 &amp; MAKIN CANTIK! ✨</div>
-        <div class="permission-note" id="cameraNote">Izinkan kamera untuk pengalaman scan lebih seru ya 💖</div>
+        <div class="photo-strip" id="photoStrip"></div>
+        <canvas id="captureCanvas" hidden></canvas>
+        <div class="permission-note" id="cameraNote">Izinkan kamera lalu klik kamera untuk perbesar/perkecil 💖</div>
       </div>
 
       <div class="cake-card">
         <h2 class="panel-title">Kue Ulang Tahun 🎂</h2>
-        <div class="cake-stage">
+        <div class="cake-stage zoomable-target" id="cakeStage" role="button" tabindex="0" aria-label="Perbesar kue">
           <div class="cake">
             <div class="tier top">
               <div class="icing"></div>
@@ -612,7 +676,7 @@
             </div>
             <div class="tier bottom">
               <div class="icing"></div>
-              <div class="candles" style="top:-36px; gap:20px;">
+              <div class="candles lower">
                 <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
                 <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
                 <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
@@ -624,6 +688,7 @@
         </div>
         <button class="cute-btn" id="blowBtn">Tiup Lilin! (Fyuuu~ 💨)</button>
         <button class="cute-btn" id="micBtn" style="background:linear-gradient(90deg,#c8ffe4,#cbe3ff)">Aktifkan Deteksi Tiupan Mic 🎙️</button>
+        <div class="permission-note">Klik area kuenya dulu kalau mau lihat penuh sebelum tiup 🎂</div>
         <div class="permission-note" id="micNote"> tiup micnya untuk memadamkan lilinnya</div>
         <div class="celebrate-text" id="celebrateText"></div>
       </div>
@@ -665,9 +730,14 @@
     const avatarFallback = document.getElementById('avatarFallback');
     const cameraNote = document.getElementById('cameraNote');
     const scanBtn = document.getElementById('scanBtn');
+    const captureBtn = document.getElementById('captureBtn');
+    const photoStrip = document.getElementById('photoStrip');
+    const captureCanvas = document.getElementById('captureCanvas');
+    const videoShell = document.getElementById('videoShell');
     const scanLine = document.getElementById('scanLine');
     const scanLoading = document.getElementById('scanLoading');
     const scanStamp = document.getElementById('scanStamp');
+    const cakeStage = document.getElementById('cakeStage');
 
     const blowBtn = document.getElementById('blowBtn');
     const micBtn = document.getElementById('micBtn');
@@ -685,6 +755,73 @@
     let candlesOff = false;
     let bgmInterval;
     let bgmOn = false;
+    const zoomableTargets = [videoShell, cakeStage];
+
+    function updateModalState() {
+      document.body.classList.toggle('modal-open', zoomableTargets.some(target => target.classList.contains('is-zoomed')));
+    }
+
+    function toggleZoom(target) {
+      const shouldOpen = !target.classList.contains('is-zoomed');
+      zoomableTargets.forEach(item => item.classList.remove('is-zoomed'));
+      if (shouldOpen) target.classList.add('is-zoomed');
+      updateModalState();
+    }
+
+    function createPhotoThumb(src) {
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = 'Hasil foto booth';
+      img.className = 'photo-thumb';
+      photoStrip.prepend(img);
+      while (photoStrip.children.length > 6) {
+        photoStrip.lastElementChild.remove();
+      }
+    }
+
+    function savePhotoFile(src) {
+      const link = document.createElement('a');
+      link.href = src;
+      link.download = `photobooth-faeruza-${Date.now()}.png`;
+      link.click();
+    }
+
+    function capturePhotoBooth() {
+      const width = webcam.videoWidth || 720;
+      const height = webcam.videoHeight || 540;
+      captureCanvas.width = width;
+      captureCanvas.height = height;
+      const ctx = captureCanvas.getContext('2d');
+
+      if (!webcam.hidden && webcam.srcObject) {
+        ctx.save();
+        ctx.translate(width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(webcam, 0, 0, width, height);
+        ctx.restore();
+      } else {
+        const bg = ctx.createLinearGradient(0, 0, width, height);
+        bg.addColorStop(0, '#7c8bd9');
+        bg.addColorStop(1, '#b05fbf');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, width, height);
+        ctx.fillStyle = '#fff';
+        ctx.font = `700 ${Math.max(24, width * 0.05)}px Fredoka`;
+        ctx.textAlign = 'center';
+        ctx.fillText('Mode Avatar Aktif ✨', width / 2, height / 2);
+      }
+
+      ctx.fillStyle = '#fff8';
+      ctx.fillRect(14, 14, width - 28, 60);
+      ctx.fillStyle = '#222';
+      ctx.font = `700 ${Math.max(18, width * 0.03)}px Fredoka`;
+      ctx.fillText('SCAN + PHOTOBOOTH 🎉', width / 2, 54);
+
+      const imageData = captureCanvas.toDataURL('image/png');
+      createPhotoThumb(imageData);
+      savePhotoFile(imageData);
+      scanLoading.textContent = 'Foto booth tersimpan ke file ✅';
+    }
 
     async function initCamera() {
       if (!navigator.mediaDevices?.getUserMedia) {
@@ -848,9 +985,30 @@
     }
 
     scanBtn.addEventListener('click', runScan);
+    captureBtn.addEventListener('click', capturePhotoBooth);
     blowBtn.addEventListener('click', extinguishCandles);
     micBtn.addEventListener('click', enableMicBlowDetection);
     bgmBtn.addEventListener('click', toggleBgm);
+    videoShell.addEventListener('click', () => toggleZoom(videoShell));
+    cakeStage.addEventListener('click', () => toggleZoom(cakeStage));
+    videoShell.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        toggleZoom(videoShell);
+      }
+    });
+    cakeStage.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        toggleZoom(cakeStage);
+      }
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        zoomableTargets.forEach(item => item.classList.remove('is-zoomed'));
+        updateModalState();
+      }
+    });
 
     window.addEventListener('beforeunload', () => {
       camStream?.getTracks().forEach(t => t.stop());
