@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HBD Faeruza Aukya Yasmin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <style>
+    :root {
+      --pink: #ffd3ea;
+      --yellow: #ffe87d;
+      --purple: #dcc8ff;
+      --blue: #a8e6ff;
+      --mint: #bff5d7;
+      --ink: #2a2a2a;
+      --bg: #fff8ef;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Fredoka", sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at 20% 20%, #fffef9 0%, #fff3d9 45%, #ffe8f1 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 16px 12px 90px;
+      position: relative;
+    }
+
+    .banner {
+      background: linear-gradient(90deg, var(--yellow), var(--pink), var(--purple), var(--blue));
+      border: 4px solid var(--ink);
+      border-radius: 20px;
+      text-align: center;
+      padding: 14px 10px;
+      font-size: clamp(1.25rem, 4vw, 2.4rem);
+      font-weight: 700;
+      text-shadow: 2px 2px 0 #fff;
+      box-shadow: 6px 6px 0 #00000022;
+      margin-bottom: 14px;
+    }
+
+    .decor {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.95;
+    }
+
+    .rainbow {
+      width: 180px;
+      height: 90px;
+      border: 8px solid var(--ink);
+      border-bottom: 0;
+      border-radius: 100px 100px 0 0;
+      background: linear-gradient(to bottom, #ff6b81 0 16%, #ffdb59 16% 32%, #7bed9f 32% 48%, #70a1ff 48% 64%, #a29bfe 64% 80%, #ffeaa7 80% 100%);
+    }
+
+    .rb1 { left: -30px; top: 100px; transform: rotate(-6deg); }
+    .rb2 { right: -45px; top: 230px; transform: rotate(10deg); }
+
+    .cloud {
+      width: 120px;
+      height: 70px;
+      background: #fff;
+      border: 4px solid var(--ink);
+      border-radius: 50px;
+      position: absolute;
+      animation: floatCloud 6s ease-in-out infinite;
+      box-shadow: 3px 3px 0 #00000012;
+    }
+    .cloud::before, .cloud::after {
+      content: "";
+      position: absolute;
+      background: #fff;
+      border: 4px solid var(--ink);
+      border-radius: 50%;
+    }
+    .cloud::before { width: 52px; height: 52px; left: 12px; top: -28px; }
+    .cloud::after { width: 44px; height: 44px; right: 10px; top: -22px; }
+
+    .cloud-face { position: absolute; inset: 28px 0 0; text-align: center; font-size: 20px; }
+
+    .cl1 { left: 26px; top: 90px; }
+    .cl2 { right: 30px; top: 125px; animation-delay: -2s; }
+
+    @keyframes floatCloud {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .main-card {
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(180deg, #ffdce8 0%, #ffeecf 100%);
+      border: 4px solid var(--ink);
+      border-radius: 24px;
+      box-shadow: 8px 8px 0 #0000001b;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .panel {
+      background: #ffffffcc;
+      border: 3px solid var(--ink);
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: 4px 4px 0 #0000001a;
+    }
+
+    .scan-window {
+      border: 4px solid var(--ink);
+      border-radius: 18px;
+      background: linear-gradient(160deg, #8a90ea, #5f6adf);
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 4 / 3;
+    }
+
+    .scan-head {
+      background: linear-gradient(90deg, #ffd764, #ff8fb5, #8ad0ff);
+      border-bottom: 4px solid var(--ink);
+      padding: 6px 10px;
+      font-size: clamp(1rem, 2vw, 1.8rem);
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    video, .fallback-avatar {
+      width: 100%;
+      height: calc(100% - 52px);
+      object-fit: cover;
+      display: block;
+    }
+
+    .fallback-avatar {
+      display: none;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 220'%3E%3Crect width='300' height='220' fill='%23959ce8'/%3E%3Ccircle cx='150' cy='100' r='58' fill='%23ffddc9' stroke='%232a2a2a' stroke-width='4'/%3E%3Ccircle cx='128' cy='94' r='6' fill='%232a2a2a'/%3E%3Ccircle cx='172' cy='94' r='6' fill='%232a2a2a'/%3E%3Cpath d='M132 122 Q150 137 168 122' fill='none' stroke='%232a2a2a' stroke-width='4' stroke-linecap='round'/%3E%3Cellipse cx='150' cy='185' rx='70' ry='38' fill='%23ffc0d9' stroke='%232a2a2a' stroke-width='4'/%3E%3Cpath d='M95 76 Q150 22 205 76' fill='none' stroke='%235a3d35' stroke-width='18' stroke-linecap='round'/%3E%3Ctext x='150' y='210' text-anchor='middle' font-size='16' font-family='Arial' fill='%232a2a2a'%3Ecamera off mode%3C/text%3E%3C/svg%3E") center/cover no-repeat;
+    }
+
+    .scan-frame {
+      position: absolute;
+      inset: 58px 12px 12px;
+      border: 3px solid #fff;
+      border-radius: 12px;
+      pointer-events: none;
+      box-shadow: inset 0 0 0 2px #0000002a;
+    }
+
+    .laser {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #3bff99, #ff68da, #3bff99);
+      box-shadow: 0 0 14px #31ff95;
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+
+    .laser.active { animation: laserScan 0.9s linear infinite; opacity: 1; }
+
+    @keyframes laserScan {
+      0% { top: 58px; }
+      50% { top: calc(100% - 12px); }
+      100% { top: 58px; }
+    }
+
+    .status {
+      margin-top: 10px;
+      min-height: 36px;
+      background: #fff;
+      border: 3px dashed var(--ink);
+      border-radius: 12px;
+      padding: 8px;
+      text-align: center;
+      font-size: clamp(0.95rem, 2.3vw, 1.1rem);
+    }
+
+    .stamp {
+      display: none;
+      margin-top: 8px;
+      background: #c6ffd4;
+      color: #147a35;
+      border: 4px solid #147a35;
+      border-radius: 14px;
+      font-weight: 700;
+      padding: 8px;
+      text-align: center;
+      transform: rotate(-3deg);
+      box-shadow: 3px 3px 0 #147a3550;
+    }
+
+    button {
+      width: 100%;
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      background: linear-gradient(180deg, #c9adff, #b48dff);
+      color: #1d1033;
+      font-size: 1.1rem;
+      font-family: "Fredoka", sans-serif;
+      font-weight: 700;
+      padding: 10px;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 #00000022;
+      transition: transform .12s ease;
+    }
+
+    button:hover { transform: translateY(-2px); }
+    button:active { transform: translateY(1px); }
+
+    .cake-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cake {
+      position: relative;
+      width: min(360px, 96%);
+      margin-top: 6px;
+    }
+
+    .tier {
+      margin: 0 auto;
+      border: 4px solid var(--ink);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffdcb8, #fcb391);
+      position: relative;
+      box-shadow: inset 0 -12px 0 #d68d67;
+    }
+
+    .tier.top { width: 62%; height: 92px; z-index: 2; }
+    .tier.bottom { width: 100%; height: 118px; margin-top: -8px; }
+
+    .icing {
+      position: absolute;
+      left: -2px;
+      right: -2px;
+      top: -10px;
+      height: 20px;
+      border: 4px solid var(--ink);
+      border-bottom: 0;
+      border-radius: 18px 18px 0 0;
+      background: #fffaf6;
+    }
+
+    .candle-row {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -48px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 14px;
+      z-index: 5;
+    }
+
+    .candle {
+      width: 12px;
+      height: 46px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: repeating-linear-gradient(45deg, #fff, #fff 8px, #95e2ff 8px, #95e2ff 16px);
+      position: relative;
+    }
+
+    .candle-number {
+      width: auto;
+      height: auto;
+      border: none;
+      background: transparent;
+      font-size: 3.1rem;
+      line-height: 1;
+      color: #ff6999;
+      text-shadow: -2px -2px 0 #fff, 2px 2px 0 #3f2e2e;
+      font-weight: 700;
+      margin: 0 4px;
+    }
+
+    .flame {
+      position: absolute;
+      left: 50%;
+      top: -18px;
+      width: 12px;
+      height: 18px;
+      transform: translateX(-50%);
+      border: 3px solid var(--ink);
+      border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+      background: linear-gradient(#fff56e, #ffa048);
+      animation: flicker 0.2s infinite alternate;
+    }
+
+    .flame.out { display: none; }
+
+    @keyframes flicker {
+      from { transform: translateX(-50%) scale(1) rotate(-2deg); }
+      to { transform: translateX(-50%) scale(0.93) rotate(2deg); }
+    }
+
+    .smoke {
+      position: absolute;
+      left: 50%;
+      top: -24px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d5d5d5;
+      opacity: 0;
+      transform: translateX(-50%);
+    }
+
+    .smoke.show { animation: puff 1.3s ease-out forwards; }
+
+    @keyframes puff {
+      from { opacity: .85; transform: translate(-50%, 0) scale(1); }
+      to { opacity: 0; transform: translate(-50%, -22px) scale(2); }
+    }
+
+    .controls {
+      display: grid;
+      gap: 8px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .btn-wind { background: linear-gradient(180deg, #d4f2ff, #9ddcff); }
+    .btn-mic { background: linear-gradient(180deg, #ffe59a, #ffc977); }
+
+    .mini-note {
+      text-align: center;
+      margin: 0;
+      background: #fff;
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      padding: 6px;
+      font-size: 0.95rem;
+    }
+
+    .celebration {
+      display: none;
+      background: #fff7b5;
+      border: 4px solid var(--ink);
+      border-radius: 14px;
+      padding: 10px;
+      text-align: center;
+      font-weight: 700;
+      color: #6f4f00;
+      animation: pop .5s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .wishes {
+      margin: 18px auto 0;
+      max-width: 920px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .wishes h2 {
+      font-size: clamp(1.45rem, 5vw, 2.2rem);
+      margin: 8px 0 10px;
+      text-shadow: 2px 2px 0 #fff;
+    }
+
+    .wish-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .wish {
+      background: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 10px 16px;
+      box-shadow: 3px 3px 0 #00000018;
+      font-size: clamp(0.95rem, 2.8vw, 1.2rem);
+      animation: bob 3s ease-in-out infinite;
+    }
+
+    .wish:nth-child(2n) { background: #e7f8cf; animation-delay: -1s; }
+    .wish:nth-child(3n) { background: #ffe0f3; animation-delay: -2s; }
+    .wish:hover { animation-duration: .6s; }
+
+    @keyframes bob {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 4;
+      background: linear-gradient(90deg, #c9a7ff, #b6e8ff, #ffc7df);
+      border-top: 4px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 12px;
+      font-weight: 700;
+      font-size: clamp(.9rem, 2.5vw, 1.6rem);
+    }
+
+    .hash { text-align: center; flex: 1; }
+    .bgm-btn {
+      width: auto;
+      min-width: 140px;
+      padding: 8px 12px;
+      font-size: .95rem;
+      margin-left: auto;
+    }
+
+    .balloon {
+      position: fixed;
+      width: 52px;
+      aspect-ratio: 0.82;
+      border: 3px solid var(--ink);
+      border-radius: 50% 50% 45% 45%;
+      box-shadow: inset -8px -6px 0 #ffffff5e;
+      animation: driftUp linear infinite;
+      z-index: 1;
+    }
+
+    .balloon::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -48px;
+      width: 2px;
+      height: 48px;
+      background: var(--ink);
+      transform: translateX(-50%);
+    }
+
+    .b1 { left: 4%; background: #ffd07a; animation-duration: 15s; animation-delay: -2s; }
+    .b2 { left: 86%; background: #ff9ec8; animation-duration: 18s; animation-delay: -7s; }
+    .b3 { left: 92%; background: #93e6ff; animation-duration: 17s; animation-delay: -3s; }
+    .b4 { left: 10%; background: #bdeea4; animation-duration: 19s; animation-delay: -10s; }
+
+    @keyframes driftUp {
+      from { transform: translateY(110vh) rotate(-3deg); }
+      to { transform: translateY(-30vh) rotate(3deg); }
+    }
+
+    @media (max-width: 860px) {
+      .main-card { grid-template-columns: 1fr; }
+      .rb2 { display: none; }
+      .cl2 { right: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="decor rainbow rb1"></div>
+  <div class="decor rainbow rb2"></div>
+  <div class="cloud cl1"><div class="cloud-face">◕‿◕</div></div>
+  <div class="cloud cl2"><div class="cloud-face">ᵔᴥᵔ</div></div>
+
+  <div class="balloon b1"></div>
+  <div class="balloon b2"></div>
+  <div class="balloon b3"></div>
+  <div class="balloon b4"></div>
+
+  <main class="page">
+    <header class="banner">🎉 HBD FAERUZA AUKYA YASMIN! (YEAY! 23! 🎂)</header>
+
+    <section class="main-card">
+      <article class="panel">
+        <div class="scan-window" id="scanWindow">
+          <div class="scan-head">SCAN MUKA</div>
+          <video id="webcam" playsinline autoplay muted></video>
+          <div class="fallback-avatar" id="fallbackAvatar" aria-hidden="true"></div>
+          <div class="scan-frame"></div>
+          <div class="laser" id="laser"></div>
+        </div>
+        <button id="scanBtn" style="margin-top:10px;">Scan Muka Dulu! 📸</button>
+        <div class="status" id="scanStatus">Izinkan kamera untuk scan muka lucu 🎀</div>
+        <div class="stamp" id="scanStamp">100% LOLOS UMUR 23 &amp; MAKIN CANTIK! ✨</div>
+      </article>
+
+      <article class="panel cake-wrap">
+        <div class="cake">
+          <div class="tier top">
+            <div class="icing"></div>
+            <div class="candle-row">
+              <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+              <div class="candle-number">2</div>
+              <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+              <div class="candle-number">3</div>
+              <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+            </div>
+          </div>
+          <div class="tier bottom">
+            <div class="icing"></div>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="btn-mic" id="micBtn">Aktifkan Deteksi Tiupan Mic 🎤</button>
+          <button class="btn-wind" id="blowBtn">Tiup Lilin! (Fyuuu~ 💨)</button>
+        </div>
+        <p class="mini-note" id="micStatus">Mic belum aktif. Bisa pakai tombol tiup sebagai backup.</p>
+        <div class="celebration" id="celebrationText">Hooray! Happy 23rd Birthday, Faeruza! 🎉</div>
+      </article>
+    </section>
+
+    <section class="wishes">
+      <h2>☁️ DOA-DOA LUCU &amp; HARAPAN ☁️</h2>
+      <div class="wish-grid">
+        <div class="wish">Semoga makin hits &amp; bersinar di usia 23!</div>
+        <div class="wish">Rezeki ngalir lancar kayak air terjun! 💸</div>
+        <div class="wish">Makin pintar, makin sukses, dan bahagia selalu! 🌸</div>
+        <div class="wish">Kompak terus dan impiannya tercapai semua!</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>🎀✨</span>
+    <div class="hash">#FAERUZA23 #BDAYVIBES</div>
+    <button class="bgm-btn" id="bgmBtn">Play BGM ▶</button>
+  </footer>
+
+  <script>
+    const video = document.getElementById("webcam");
+    const fallbackAvatar = document.getElementById("fallbackAvatar");
+    const scanBtn = document.getElementById("scanBtn");
+    const scanStatus = document.getElementById("scanStatus");
+    const scanStamp = document.getElementById("scanStamp");
+    const laser = document.getElementById("laser");
+
+    const flames = [...document.querySelectorAll('.flame')];
+    const smokes = [...document.querySelectorAll('.smoke')];
+    const blowBtn = document.getElementById("blowBtn");
+    const micBtn = document.getElementById("micBtn");
+    const micStatus = document.getElementById("micStatus");
+    const celebrationText = document.getElementById("celebrationText");
+    const bgmBtn = document.getElementById("bgmBtn");
+
+    let cameraReady = false;
+    let isScanning = false;
+    let candlesOut = false;
+    let micListening = false;
+    let micAnalyser, micData, micAnimation;
+    let bgmCtx = null;
+    let bgmTimer = null;
+
+    async function startCamera() {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        scanStatus.textContent = "Browser belum dukung kamera. Pakai mode avatar ya!";
+        showFallbackAvatar();
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } },
+          audio: false
+        });
+        video.srcObject = stream;
+        cameraReady = true;
+        scanStatus.textContent = "Kamera siap! Tinggal klik scan ✨";
+      } catch (err) {
+        showFallbackAvatar();
+        scanStatus.textContent = "Kamera belum diizinkan. Tetap bisa lanjut pakai avatar lucu 🥰";
+      }
+    }
+
+    function showFallbackAvatar() {
+      video.style.display = "none";
+      fallbackAvatar.style.display = "block";
+    }
+
+    function playChime() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const now = ctx.currentTime;
+      const notes = [523.25, 659.25, 783.99];
+      notes.forEach((hz, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.value = hz;
+        gain.gain.setValueAtTime(0.0001, now + i * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.12, now + i * 0.12 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.12 + 0.18);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now + i * 0.12);
+        osc.stop(now + i * 0.12 + 0.22);
+      });
+    }
+
+    function wait(ms) {
+      return new Promise(r => setTimeout(r, ms));
+    }
+
+    scanBtn.addEventListener("click", async () => {
+      if (isScanning) return;
+      isScanning = true;
+      scanStamp.style.display = "none";
+      laser.classList.add("active");
+      scanStatus.textContent = "Mengecek kadar keimutan...";
+      await wait(1500);
+      scanStatus.textContent = "Memverifikasi status umur 23...";
+      await wait(1500);
+      laser.classList.remove("active");
+      scanStatus.textContent = cameraReady
+        ? "Scan selesai! Aura glowing terdeteksi 😍"
+        : "Scan avatar selesai! Keimutan tetap valid 😘";
+      scanStamp.style.display = "block";
+      playChime();
+      isScanning = false;
+    });
+
+    async function enableMicBlowDetection() {
+      if (micListening || candlesOut) return;
+      if (!navigator.mediaDevices?.getUserMedia) {
+        micStatus.textContent = "Browser belum dukung mic. Pakai tombol tiup saja ya.";
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const src = ctx.createMediaStreamSource(stream);
+        micAnalyser = ctx.createAnalyser();
+        micAnalyser.fftSize = 512;
+        micData = new Uint8Array(micAnalyser.frequencyBinCount);
+        src.connect(micAnalyser);
+        micListening = true;
+        micStatus.textContent = "Mic aktif! Coba tiup ke mic sampai lilin padam 💨";
+        monitorBlow();
+      } catch (err) {
+        micStatus.textContent = "Akses mic ditolak. Tenang, pakai tombol Tiup Lilin aja ya!";
+      }
+    }
+
+    function monitorBlow() {
+      if (!micListening || candlesOut) return;
+      micAnalyser.getByteFrequencyData(micData);
+      const avg = micData.reduce((sum, n) => sum + n, 0) / micData.length;
+      if (avg > 55) {
+        extinguishCandles();
+        micStatus.textContent = "Tiupan terdeteksi! Lilin berhasil dipadamkan! 🎉";
+        micListening = false;
+        cancelAnimationFrame(micAnimation);
+        return;
+      }
+      micAnimation = requestAnimationFrame(monitorBlow);
+    }
+
+    function burstConfetti() {
+      const duration = 2200;
+      const end = Date.now() + duration;
+      (function frame() {
+        confetti({ particleCount: 8, spread: 70, startVelocity: 45, origin: { x: Math.random(), y: Math.random() - 0.2 } });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      })();
+    }
+
+    function extinguishCandles() {
+      if (candlesOut) return;
+      candlesOut = true;
+      flames.forEach(f => f.classList.add("out"));
+      smokes.forEach((s, i) => setTimeout(() => s.classList.add("show"), i * 120));
+      celebrationText.style.display = "block";
+      burstConfetti();
+      playChime();
+    }
+
+    micBtn.addEventListener("click", enableMicBlowDetection);
+    blowBtn.addEventListener("click", extinguishCandles);
+
+    function startBGM() {
+      if (!bgmCtx) bgmCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const melody = [523.25, 659.25, 587.33, 783.99, 698.46, 659.25, 523.25, 587.33];
+      let i = 0;
+      bgmTimer = setInterval(() => {
+        const osc = bgmCtx.createOscillator();
+        const gain = bgmCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = melody[i % melody.length];
+        gain.gain.setValueAtTime(0.0001, bgmCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.06, bgmCtx.currentTime + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, bgmCtx.currentTime + 0.24);
+        osc.connect(gain).connect(bgmCtx.destination);
+        osc.start();
+        osc.stop(bgmCtx.currentTime + 0.26);
+        i++;
+      }, 280);
+      bgmBtn.textContent = "Pause BGM ⏸";
+    }
+
+    function stopBGM() {
+      clearInterval(bgmTimer);
+      bgmTimer = null;
+      bgmBtn.textContent = "Play BGM ▶";
+    }
+
+    bgmBtn.addEventListener("click", () => {
+      if (bgmTimer) stopBGM();
+      else startBGM();
+    });
+
+    startCamera();
+  </script>
+</body>
+</html>
