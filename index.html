@@ -207,9 +207,12 @@
       width: min(920px, 95vw);
       max-height: 90vh;
       margin: auto;
-      z-index: 50;
+      z-index: 9999;
       box-shadow: 0 15px 45px #00000045;
       cursor: zoom-out;
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 18px;
     }
 
     body.modal-open {
@@ -710,6 +713,7 @@
         <div class="camera-actions">
           <button class="cute-btn" id="scanBtn">Scan Muka Dulu! 📸</button>
           <button class="cute-btn" id="captureBtn" style="background:linear-gradient(90deg,#c8ffe4,#ffd6f0)">Buat Foto Twibbon &amp; Simpan 💾</button>
+          <button class="cute-btn" id="recordBtn" style="background:linear-gradient(90deg,#ffd6d6,#ffebc8)">Mulai Rekam Video 🎥</button>
         </div>
         <div class="camera-toolbar">
           <button class="cute-btn" id="zoomCameraBtn" style="margin-top:0;background:linear-gradient(90deg,#d5e4ff,#ffe7f7)">Perbesar Kamera 🔍</button>
@@ -717,11 +721,14 @@
             <option value="classic">Classic Portrait</option>
             <option value="triple">3 Lapis Story</option>
             <option value="duo">Duo Frame Party</option>
+            <option value="quad">Quad Squad 📸</option>
           </select>
           <select class="layout-select" id="themeSelect" aria-label="Pilih tema twibbon">
             <option value="candy">Candy Cute</option>
             <option value="royal">Royal Gold</option>
             <option value="men">Men Birthday Special</option>
+            <option value="ocean">Ocean Breeze 🌊</option>
+            <option value="forest">Forest Magic 🌲</option>
           </select>
         </div>
         <div class="camera-status">
@@ -817,6 +824,7 @@
     const cameraNote = document.getElementById('cameraNote');
     const scanBtn = document.getElementById('scanBtn');
     const captureBtn = document.getElementById('captureBtn');
+    const recordBtn = document.getElementById('recordBtn');
     const zoomCameraBtn = document.getElementById('zoomCameraBtn');
     const zoomCakeBtn = document.getElementById('zoomCakeBtn');
     const layoutSelect = document.getElementById('layoutSelect');
@@ -839,6 +847,9 @@
 
     let camStream;
     let micStream;
+    let mediaRecorder;
+    let recordedChunks = [];
+    let isRecording = false;
     let audioCtx;
     let analyser;
     let micDetectInterval;
@@ -961,6 +972,28 @@
           subtitle: 'Men Birthday Special'
         };
       }
+      if (theme === 'ocean') {
+        return {
+          stops: ['#a8edea', '#fed6e3', '#89f7fe'],
+          bubble: '#ffffff50',
+          title: '#667eea',
+          badge: '#764ba2',
+          border: '#89f7fe',
+          sticker: '🌊',
+          subtitle: 'Ocean Vibes 23'
+        };
+      }
+      if (theme === 'forest') {
+        return {
+          stops: ['#d4fc79', '#96e6a1', '#84fab0'],
+          bubble: '#ffffff50',
+          title: '#00f2fe',
+          badge: '#4facfe',
+          border: '#8fd3f4',
+          sticker: '🌲',
+          subtitle: 'Enchanted 23'
+        };
+      }
       return {
         stops: ['#ffe3f2', '#fff6d9', '#dff2ff'],
         bubble: '#ffffff80',
@@ -1045,6 +1078,12 @@
         drawSourceFrame(ctx, 80, 260, 440, 700);
         drawSourceFrame(ctx, 560, 260, 440, 700);
         drawBadgeText(ctx, width, height, 'Duo Frame Party 💕', themeConfig);
+      } else if (layout === 'quad') {
+        drawSourceFrame(ctx, 80, 260, 440, 390);
+        drawSourceFrame(ctx, 560, 260, 440, 390);
+        drawSourceFrame(ctx, 80, 680, 440, 390);
+        drawSourceFrame(ctx, 560, 680, 440, 390);
+        drawBadgeText(ctx, width, height, 'Quad Squad Fun 📸', themeConfig);
       } else {
         drawSourceFrame(ctx, 130, 250, 820, 850);
         drawBadgeText(ctx, width, height, 'Classic Twibbon 🌟', themeConfig);
@@ -1066,13 +1105,55 @@
         return;
       }
       try {
-        camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+        camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
         webcam.srcObject = camStream;
         webcam.hidden = false;
         avatarFallback.hidden = true;
         cameraNote.textContent = 'Kamera siap! Pilih layout + tema twibbon lalu ambil foto 💖';
       } catch (error) {
         cameraNote.textContent = 'Kamera ditolak/terkunci. Tenang, avatar tetap bisa dipakai untuk scan 🎀';
+      }
+    }
+
+    function toggleRecording() {
+      if (!camStream) {
+        alert("Kamera belum aktif!");
+        return;
+      }
+      if (isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        recordBtn.textContent = 'Mulai Rekam Video 🎥';
+        recordBtn.style.background = 'linear-gradient(90deg,#ffd6d6,#ffebc8)';
+      } else {
+        recordedChunks = [];
+        try {
+          mediaRecorder = new MediaRecorder(camStream, { mimeType: 'video/webm' });
+        } catch (e) {
+          mediaRecorder = new MediaRecorder(camStream);
+        }
+        mediaRecorder.ondataavailable = event => {
+          if (event.data.size > 0) recordedChunks.push(event.data);
+        };
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType || 'video/webm' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = `HBD_Video_${Date.now()}.webm`;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 100);
+          scanLoading.textContent = 'Video berhasil disimpan ✅';
+        };
+        mediaRecorder.start();
+        isRecording = true;
+        recordBtn.textContent = 'Berhenti Rekam 🛑';
+        recordBtn.style.background = '#ff98b8';
       }
     }
 
@@ -1229,6 +1310,7 @@
 
     scanBtn.addEventListener('click', runScan);
     captureBtn.addEventListener('click', capturePhotoBooth);
+    recordBtn.addEventListener('click', toggleRecording);
     zoomCameraBtn.addEventListener('click', () => toggleZoom(videoShell));
     zoomCakeBtn.addEventListener('click', () => toggleZoom(cakeStage));
     layoutSelect.addEventListener('change', updateTwibbonHint);

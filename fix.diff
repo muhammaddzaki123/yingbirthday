@@ -1,0 +1,142 @@
+<<<<<<< SEARCH
+    .zoomable-target.is-zoomed {
+      position: fixed;
+      inset: clamp(12px, 3vw, 28px);
+      width: min(920px, 95vw);
+      max-height: 90vh;
+      margin: auto;
+      z-index: 50;
+      box-shadow: 0 15px 45px #00000045;
+      cursor: zoom-out;
+    }
+=======
+    .zoomable-target.is-zoomed {
+      position: fixed;
+      inset: clamp(12px, 3vw, 28px);
+      width: min(920px, 95vw);
+      max-height: 90vh;
+      margin: auto;
+      z-index: 9999;
+      box-shadow: 0 15px 45px #00000045;
+      cursor: zoom-out;
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 18px;
+    }
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+        <div class="camera-actions">
+          <button class="cute-btn" id="scanBtn">Scan Muka Dulu! 📸</button>
+          <button class="cute-btn" id="captureBtn" style="background:linear-gradient(90deg,#c8ffe4,#ffd6f0)">Buat Foto Twibbon &amp; Simpan 💾</button>
+        </div>
+=======
+        <div class="camera-actions">
+          <button class="cute-btn" id="scanBtn">Scan Muka Dulu! 📸</button>
+          <button class="cute-btn" id="captureBtn" style="background:linear-gradient(90deg,#c8ffe4,#ffd6f0)">Buat Foto Twibbon &amp; Simpan 💾</button>
+          <button class="cute-btn" id="recordBtn" style="background:linear-gradient(90deg,#ffd6d6,#ffebc8)">Mulai Rekam Video 🎥</button>
+        </div>
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+    const webcam = document.getElementById('webcam');
+    const avatarFallback = document.getElementById('avatarFallback');
+    const cameraNote = document.getElementById('cameraNote');
+    const scanBtn = document.getElementById('scanBtn');
+    const captureBtn = document.getElementById('captureBtn');
+    const zoomCameraBtn = document.getElementById('zoomCameraBtn');
+=======
+    const webcam = document.getElementById('webcam');
+    const avatarFallback = document.getElementById('avatarFallback');
+    const cameraNote = document.getElementById('cameraNote');
+    const scanBtn = document.getElementById('scanBtn');
+    const captureBtn = document.getElementById('captureBtn');
+    const recordBtn = document.getElementById('recordBtn');
+    const zoomCameraBtn = document.getElementById('zoomCameraBtn');
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+    let camStream;
+    let micStream;
+    let audioCtx;
+=======
+    let camStream;
+    let micStream;
+    let mediaRecorder;
+    let recordedChunks = [];
+    let isRecording = false;
+    let audioCtx;
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+    async function initCamera() {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        cameraNote.textContent = 'Browser ini belum mendukung kamera, pakai mode avatar lucu ya ✨';
+        return;
+      }
+      try {
+        camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+        webcam.srcObject = camStream;
+=======
+    async function initCamera() {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        cameraNote.textContent = 'Browser ini belum mendukung kamera, pakai mode avatar lucu ya ✨';
+        return;
+      }
+      try {
+        camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
+        webcam.srcObject = camStream;
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+    function updateTwibbonHint() {
+=======
+    function toggleRecording() {
+      if (!camStream) {
+        alert("Kamera belum aktif!");
+        return;
+      }
+      if (isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        recordBtn.textContent = 'Mulai Rekam Video 🎥';
+        recordBtn.style.background = 'linear-gradient(90deg,#ffd6d6,#ffebc8)';
+      } else {
+        recordedChunks = [];
+        try {
+          mediaRecorder = new MediaRecorder(camStream, { mimeType: 'video/webm' });
+        } catch (e) {
+          mediaRecorder = new MediaRecorder(camStream);
+        }
+        mediaRecorder.ondataavailable = event => {
+          if (event.data.size > 0) recordedChunks.push(event.data);
+        };
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType || 'video/webm' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = `HBD_Video_${Date.now()}.webm`;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 100);
+          scanLoading.textContent = 'Video berhasil disimpan ✅';
+        };
+        mediaRecorder.start();
+        isRecording = true;
+        recordBtn.textContent = 'Berhenti Rekam 🛑';
+        recordBtn.style.background = '#ff98b8';
+      }
+    }
+
+    function updateTwibbonHint() {
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+    scanBtn.addEventListener('click', runScan);
+    captureBtn.addEventListener('click', capturePhotoBooth);
+    zoomCameraBtn.addEventListener('click', () => toggleZoom(videoShell));
+=======
+    scanBtn.addEventListener('click', runScan);
+    captureBtn.addEventListener('click', capturePhotoBooth);
+    recordBtn.addEventListener('click', toggleRecording);
+    zoomCameraBtn.addEventListener('click', () => toggleZoom(videoShell));
+>>>>>>> REPLACE

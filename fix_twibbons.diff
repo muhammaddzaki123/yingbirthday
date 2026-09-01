@@ -1,0 +1,152 @@
+<<<<<<< SEARCH
+          <select class="layout-select" id="layoutSelect" aria-label="Pilih layout twibbon">
+            <option value="classic">Classic Portrait</option>
+            <option value="triple">3 Lapis Story</option>
+            <option value="duo">Duo Frame Party</option>
+          </select>
+          <select class="layout-select" id="themeSelect" aria-label="Pilih tema twibbon">
+            <option value="candy">Candy Cute</option>
+            <option value="royal">Royal Gold</option>
+            <option value="men">Men Birthday Special</option>
+          </select>
+=======
+          <select class="layout-select" id="layoutSelect" aria-label="Pilih layout twibbon">
+            <option value="classic">Classic Portrait</option>
+            <option value="triple">3 Lapis Story</option>
+            <option value="duo">Duo Frame Party</option>
+            <option value="quad">Quad Squad 📸</option>
+          </select>
+          <select class="layout-select" id="themeSelect" aria-label="Pilih tema twibbon">
+            <option value="candy">Candy Cute</option>
+            <option value="royal">Royal Gold</option>
+            <option value="men">Men Birthday Special</option>
+            <option value="ocean">Ocean Breeze 🌊</option>
+            <option value="forest">Forest Magic 🌲</option>
+          </select>
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+    function getThemeConfig(theme) {
+      if (theme === 'royal') {
+        return {
+          stops: ['#fff3cc', '#ffdba1', '#dbe9ff'],
+          bubble: '#ffffff50',
+          title: '#5d3b00',
+          badge: '#8c5b00',
+          border: '#b57a00',
+          sticker: '👑',
+          subtitle: 'Royal Gold Birthday'
+        };
+      }
+      if (theme === 'men') {
+        return {
+          stops: ['#d9ecff', '#c9d2ff', '#c3ffd8'],
+          bubble: '#ffffff45',
+          title: '#133f74',
+          badge: '#265aa8',
+          border: '#1b3e70',
+          sticker: '🎯',
+          subtitle: 'Men Birthday Special'
+        };
+      }
+      return {
+        stops: ['#ffe3f2', '#fff6d9', '#dff2ff'],
+        bubble: '#ffffff80',
+        title: '#222',
+        badge: '#ff4e95',
+        border: '#ff90c2',
+        sticker: '🎀',
+        subtitle: 'Candy Cute Birthday'
+      };
+    }
+=======
+    function getThemeConfig(theme) {
+      if (theme === 'royal') {
+        return {
+          stops: ['#fff3cc', '#ffdba1', '#dbe9ff'],
+          bubble: '#ffffff50',
+          title: '#5d3b00',
+          badge: '#8c5b00',
+          border: '#b57a00',
+          sticker: '👑',
+          subtitle: 'Royal Gold Birthday'
+        };
+      }
+      if (theme === 'men') {
+        return {
+          stops: ['#d9ecff', '#c9d2ff', '#c3ffd8'],
+          bubble: '#ffffff45',
+          title: '#133f74',
+          badge: '#265aa8',
+          border: '#1b3e70',
+          sticker: '🎯',
+          subtitle: 'Men Birthday Special'
+        };
+      }
+      if (theme === 'ocean') {
+        return {
+          stops: ['#a8edea', '#fed6e3', '#89f7fe'],
+          bubble: '#ffffff50',
+          title: '#667eea',
+          badge: '#764ba2',
+          border: '#89f7fe',
+          sticker: '🌊',
+          subtitle: 'Ocean Vibes 23'
+        };
+      }
+      if (theme === 'forest') {
+        return {
+          stops: ['#d4fc79', '#96e6a1', '#84fab0'],
+          bubble: '#ffffff50',
+          title: '#00f2fe',
+          badge: '#4facfe',
+          border: '#8fd3f4',
+          sticker: '🌲',
+          subtitle: 'Enchanted 23'
+        };
+      }
+      return {
+        stops: ['#ffe3f2', '#fff6d9', '#dff2ff'],
+        bubble: '#ffffff80',
+        title: '#222',
+        badge: '#ff4e95',
+        border: '#ff90c2',
+        sticker: '🎀',
+        subtitle: 'Candy Cute Birthday'
+      };
+    }
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+      if (layout === 'triple') {
+        drawSourceFrame(ctx, 170, 240, 740, 260);
+        drawSourceFrame(ctx, 130, 530, 820, 260);
+        drawSourceFrame(ctx, 170, 820, 740, 260);
+        drawBadgeText(ctx, width, height, '3 Lapis Celebration ✨', themeConfig);
+      } else if (layout === 'duo') {
+        drawSourceFrame(ctx, 80, 260, 440, 700);
+        drawSourceFrame(ctx, 560, 260, 440, 700);
+        drawBadgeText(ctx, width, height, 'Duo Frame Party 💕', themeConfig);
+      } else {
+        drawSourceFrame(ctx, 130, 250, 820, 850);
+        drawBadgeText(ctx, width, height, 'Classic Twibbon 🌟', themeConfig);
+      }
+=======
+      if (layout === 'triple') {
+        drawSourceFrame(ctx, 170, 240, 740, 260);
+        drawSourceFrame(ctx, 130, 530, 820, 260);
+        drawSourceFrame(ctx, 170, 820, 740, 260);
+        drawBadgeText(ctx, width, height, '3 Lapis Celebration ✨', themeConfig);
+      } else if (layout === 'duo') {
+        drawSourceFrame(ctx, 80, 260, 440, 700);
+        drawSourceFrame(ctx, 560, 260, 440, 700);
+        drawBadgeText(ctx, width, height, 'Duo Frame Party 💕', themeConfig);
+      } else if (layout === 'quad') {
+        drawSourceFrame(ctx, 80, 260, 440, 390);
+        drawSourceFrame(ctx, 560, 260, 440, 390);
+        drawSourceFrame(ctx, 80, 680, 440, 390);
+        drawSourceFrame(ctx, 560, 680, 440, 390);
+        drawBadgeText(ctx, width, height, 'Quad Squad Fun 📸', themeConfig);
+      } else {
+        drawSourceFrame(ctx, 130, 250, 820, 850);
+        drawBadgeText(ctx, width, height, 'Classic Twibbon 🌟', themeConfig);
+      }
+>>>>>>> REPLACE
