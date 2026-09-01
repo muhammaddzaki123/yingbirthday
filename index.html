@@ -146,11 +146,11 @@
 
     .camera-card,
     .cake-card {
-      background: #fff9;
+      background: rgba(255, 255, 255, 0.95);
       border: 4px solid var(--ink);
-      border-radius: 20px;
-      padding: 12px;
-      box-shadow: 5px 5px 0 #00000018;
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
       position: relative;
     }
 
@@ -352,7 +352,7 @@
       padding: 24px 10px 16px;
       position: relative;
       overflow: visible;
-      min-height: 290px;
+      min-height: 380px;
     }
 
     .cake-glow {
@@ -372,30 +372,52 @@
       width: min(260px, 84%);
       margin: 0 auto;
       z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .tier {
       margin: 0 auto;
       border: 4px solid var(--ink);
       border-radius: 16px;
-      background: #f5c89c;
+      background: linear-gradient(180deg, #ffd1e8, #ff99cc);
       position: relative;
-      box-shadow: inset 0 -12px 0 #d09a6a;
+      box-shadow: inset 0 -12px 0 #ff66b3, 0 8px 10px rgba(0,0,0,0.1);
     }
 
-    .tier.main {
-      width: 100%;
-      height: 120px;
+    .tier.top {
+      width: 55%;
+      height: 80px;
       border-radius: 18px;
+      z-index: 5;
+    }
+
+    .tier.middle {
+      width: 75%;
+      height: 90px;
+      border-radius: 18px;
+      z-index: 4;
+      margin-top: -15px;
+      background: linear-gradient(180deg, #ffe86f, #ffcc00);
+      box-shadow: inset 0 -12px 0 #e6b800, 0 8px 10px rgba(0,0,0,0.1);
+    }
+
+    .tier.bottom {
+      width: 100%;
+      height: 110px;
+      border-radius: 18px;
+      z-index: 3;
+      margin-top: -15px;
     }
 
     .icing {
       position: absolute;
       top: -10px;
-      left: 0;
-      right: 0;
+      left: -4px;
+      right: -4px;
       height: 26px;
-      background: #fff5dd;
+      background: #fff;
       border: 4px solid var(--ink);
       border-radius: 20px;
     }
@@ -408,7 +430,7 @@
       bottom: -16px;
       height: 16px;
       border-radius: 0 0 16px 16px;
-      background: repeating-radial-gradient(circle at 12px 0, #fff5dd 0 10px, transparent 10px 20px);
+      background: repeating-radial-gradient(circle at 12px 0, #fff 0 10px, transparent 10px 20px);
     }
 
     .candles {
@@ -629,7 +651,7 @@
       .cloud-1 { left: -30px; top: 184px; transform: scale(.8); }
       .page { padding-bottom: 110px; }
       .footer-ribbon { justify-content: center; }
-      .cake-stage { min-height: 270px; }
+      .cake-stage { min-height: 380px; }
       .zoomable-target.is-zoomed { width: 96vw; }
       .camera-toolbar { grid-template-columns: 1fr 1fr; }
     }
@@ -637,10 +659,12 @@
     @media (max-width: 600px) {
       .header-banner { margin-bottom: 16px; }
       .main-wrap { padding: 12px; gap: 14px; }
-      .camera-card, .cake-card { padding: 10px; }
+      .camera-card, .cake-card { padding: 16px; }
       .camera-toolbar { grid-template-columns: 1fr; }
-      .cake-stage { min-height: 250px; }
-      .tier.main { height: 100px; }
+      .cake-stage { min-height: 350px; }
+      .tier.bottom { height: 90px; }
+      .tier.middle { height: 75px; }
+      .tier.top { height: 70px; }
     }
   </style>
 </head>
@@ -699,7 +723,7 @@
         <div class="cake-stage zoomable-target" id="cakeStage" role="button" tabindex="0" aria-label="Perbesar kue">
           <div class="cake-glow"></div>
           <div class="cake">
-            <div class="tier main">
+            <div class="tier top">
               <div class="icing"></div>
               <div class="candles">
                 <div class="candle num"><span>2</span><div class="flame"></div><div class="smoke"></div></div>
@@ -707,6 +731,12 @@
                 <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
                 <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
               </div>
+            </div>
+            <div class="tier middle">
+              <div class="icing"></div>
+            </div>
+            <div class="tier bottom">
+              <div class="icing"></div>
             </div>
           </div>
         </div>
