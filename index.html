@@ -1,0 +1,865 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HBD Faeruza Aukya Yasmin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <style>
+    :root {
+      --pink: #ffd1e8;
+      --yellow: #ffe86f;
+      --purple: #d9c3ff;
+      --sky: #b9e8ff;
+      --ink: #222;
+      --mint: #baf7d1;
+      --peach: #ffd8b5;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Fredoka', sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 5% 10%, #fff9d9 0, transparent 35%),
+        radial-gradient(circle at 95% 85%, #ffd8f0 0, transparent 35%),
+        linear-gradient(160deg, #fffef7, #ffeef8 40%, #eef9ff);
+      overflow-x: hidden;
+    }
+
+    .page {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 16px 14px 90px;
+      position: relative;
+    }
+
+    .header-banner {
+      background: linear-gradient(90deg, #ff7fb6, #ffd66d, #8cd8ff, #bca1ff);
+      border: 4px solid var(--ink);
+      border-radius: 18px;
+      box-shadow: 6px 6px 0 #00000020;
+      padding: 16px;
+      text-align: center;
+      font-size: clamp(1.2rem, 3.6vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 0 #fff;
+      margin-bottom: 22px;
+    }
+
+    .rainbow {
+      position: absolute;
+      width: 190px;
+      height: 100px;
+      border-radius: 120px 120px 0 0;
+      border: 8px solid var(--ink);
+      border-bottom: 0;
+      background:
+        linear-gradient(#ff7c9f, #ff7c9f) padding-box,
+        linear-gradient(180deg,
+          #ff7c9f 0 20%, #ffe46f 20% 40%, #9ff0c6 40% 60%,
+          #95d0ff 60% 80%, #c7abff 80% 100%);
+      overflow: hidden;
+      box-shadow: 4px 4px 0 #00000020;
+    }
+
+    .rainbow::after {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border-radius: 90px 90px 0 0;
+      background: #fffef8;
+      border: 5px solid var(--ink);
+      border-bottom: 0;
+    }
+
+    .rainbow.left { left: -40px; top: 84px; transform: scale(.9); }
+    .rainbow.right { right: -52px; top: 62px; transform: scale(.75); }
+
+    .smile-cloud {
+      position: absolute;
+      width: 180px;
+      height: 80px;
+      background: #fff;
+      border: 4px solid var(--ink);
+      border-radius: 50px;
+      box-shadow: 4px 4px 0 #00000018;
+      animation: bob 4.5s ease-in-out infinite;
+      z-index: 2;
+    }
+
+    .smile-cloud::before,
+    .smile-cloud::after {
+      content: "";
+      position: absolute;
+      background: inherit;
+      border: inherit;
+      border-radius: 50%;
+    }
+
+    .smile-cloud::before { width: 64px; height: 64px; top: -30px; left: 22px; }
+    .smile-cloud::after { width: 75px; height: 75px; top: -33px; right: 24px; }
+
+    .cloud-face {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      font-family: 'Patrick Hand', cursive;
+    }
+
+    .cloud-1 { top: 170px; left: -8px; }
+    .cloud-2 { top: 96px; right: 20px; transform: scale(.9); animation-delay: .8s; }
+
+    .main-wrap {
+      background: linear-gradient(160deg, #ffdce9, #ffeed4 35%, #d9efff 100%);
+      border: 4px solid var(--ink);
+      border-radius: 24px;
+      box-shadow: 7px 7px 0 #00000020;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+      position: relative;
+      z-index: 3;
+    }
+
+    .panel-title {
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: clamp(1.3rem, 2.8vw, 2rem);
+      text-shadow: 2px 2px 0 #fff;
+    }
+
+    .camera-card,
+    .cake-card {
+      background: #fff9;
+      border: 4px solid var(--ink);
+      border-radius: 20px;
+      padding: 12px;
+      box-shadow: 5px 5px 0 #00000018;
+      position: relative;
+    }
+
+    .retro-window {
+      background: #7c8bd9;
+      border: 4px solid var(--ink);
+      border-radius: 16px;
+      padding: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .window-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .window-buttons span {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin-left: 5px;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+    }
+
+    .window-buttons span:nth-child(1){background:#ffdb6f}
+    .window-buttons span:nth-child(2){background:#9effc4}
+    .window-buttons span:nth-child(3){background:#ff98b8}
+
+    .video-shell {
+      aspect-ratio: 4 / 3;
+      border: 4px solid #fff;
+      border-radius: 12px;
+      background: #7266c3;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+
+    video, .avatar-fallback {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-fallback {
+      display: grid;
+      place-items: center;
+      font-size: clamp(2rem, 10vw, 5rem);
+      color: #fff;
+      background: radial-gradient(circle at 40% 30%, #927dff, #5f4db7);
+      padding: 10px;
+      text-align: center;
+    }
+
+    .scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #00ffa2, #ff75de, #00ffa2);
+      box-shadow: 0 0 14px #fff;
+      opacity: 0;
+      transform: translateY(0);
+    }
+
+    .scan-line.active {
+      opacity: 1;
+      animation: scan 1s linear infinite;
+    }
+
+    .status-text,
+    .scan-loading {
+      margin: 10px 0 0;
+      text-align: center;
+      font-family: 'Patrick Hand', cursive;
+      font-size: clamp(1.05rem, 2.2vw, 1.4rem);
+      min-height: 30px;
+    }
+
+    .scan-stamp {
+      background: #ffe7f4;
+      border: 4px dashed #ff5ea6;
+      border-radius: 12px;
+      padding: 8px;
+      transform: rotate(-2deg);
+      font-weight: 700;
+      display: none;
+      text-align: center;
+      margin-top: 10px;
+      color: #b5005f;
+    }
+
+    .cute-btn {
+      display: block;
+      margin: 10px auto 0;
+      width: 100%;
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--yellow), #ffbfdb);
+      box-shadow: 3px 3px 0 #0000002a;
+      cursor: pointer;
+    }
+
+    .cute-btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #0000002a; }
+
+    .permission-note {
+      margin-top: 8px;
+      font-size: .95rem;
+      text-align: center;
+      opacity: .85;
+      font-family: 'Patrick Hand', cursive;
+    }
+
+    .cake-stage {
+      margin-top: 8px;
+      background: radial-gradient(circle at 50% -10%, #fff, #ffd5e2);
+      border: 4px solid var(--ink);
+      border-radius: 18px;
+      padding: 24px 8px 16px;
+      position: relative;
+      overflow: hidden;
+      min-height: 310px;
+    }
+
+    .table {
+      position: absolute;
+      bottom: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 115%;
+      height: 130px;
+      background: #ffb6cb;
+      border: 4px solid var(--ink);
+      border-radius: 50%;
+    }
+
+    .cake {
+      position: relative;
+      width: min(300px, 92%);
+      margin: 0 auto;
+      z-index: 2;
+    }
+
+    .tier {
+      margin: 0 auto;
+      border: 4px solid var(--ink);
+      border-radius: 16px;
+      background: #f5c89c;
+      position: relative;
+      box-shadow: inset 0 -12px 0 #d09a6a;
+    }
+
+    .tier.bottom {
+      width: 100%;
+      height: 110px;
+      border-radius: 18px;
+    }
+
+    .tier.top {
+      width: 72%;
+      height: 85px;
+      margin-bottom: -4px;
+      z-index: 4;
+    }
+
+    .icing {
+      position: absolute;
+      top: -10px;
+      left: 0;
+      right: 0;
+      height: 26px;
+      background: #fff5dd;
+      border: 4px solid var(--ink);
+      border-radius: 20px;
+    }
+
+    .icing::after {
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: -16px;
+      height: 16px;
+      border-radius: 0 0 16px 16px;
+      background: repeating-radial-gradient(circle at 12px 0, #fff5dd 0 10px, transparent 10px 20px);
+    }
+
+    .candles {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: -48px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      z-index: 6;
+    }
+
+    .candle {
+      width: 12px;
+      height: 44px;
+      border: 3px solid var(--ink);
+      border-radius: 7px;
+      background: repeating-linear-gradient(45deg, #fff 0 7px, #7de4ff 7px 14px);
+      position: relative;
+    }
+
+    .candle.num {
+      width: 30px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      background: #ffd98f;
+      color: #8e4300;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .flame {
+      position: absolute;
+      width: 13px;
+      height: 18px;
+      border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+      background: radial-gradient(circle at 50% 70%, #fff6a2, #ffa63e 65%, #ff6a00);
+      border: 2px solid var(--ink);
+      left: 50%;
+      transform: translateX(-50%);
+      top: -20px;
+      animation: flicker .2s infinite alternate;
+      transform-origin: center bottom;
+    }
+
+    .flame.off {
+      display: none;
+    }
+
+    .smoke {
+      position: absolute;
+      left: 50%;
+      top: -20px;
+      width: 8px;
+      height: 8px;
+      background: #ddd;
+      border: 2px solid #808080;
+      border-radius: 50%;
+      opacity: 0;
+      transform: translateX(-50%);
+    }
+
+    .smoke.show {
+      animation: smokeUp 1s ease-out forwards;
+    }
+
+    .celebrate-text {
+      margin-top: 16px;
+      text-align: center;
+      font-weight: 700;
+      font-size: clamp(1.05rem, 2.4vw, 1.4rem);
+      min-height: 28px;
+    }
+
+    .wish-section {
+      margin-top: 22px;
+      background: #fffdf3;
+      border: 4px solid var(--ink);
+      border-radius: 24px;
+      box-shadow: 6px 6px 0 #00000014;
+      padding: 18px;
+      text-align: center;
+      position: relative;
+      z-index: 3;
+    }
+
+    .wish-title {
+      margin: 0 0 12px;
+      font-size: clamp(1.3rem, 4vw, 2.2rem);
+      text-shadow: 2px 2px 0 #fff;
+    }
+
+    .wish-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .wish {
+      background: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: clamp(1rem, 2.2vw, 1.3rem);
+      box-shadow: 3px 3px 0 #00000020;
+      transition: transform .2s;
+      font-family: 'Patrick Hand', cursive;
+    }
+
+    .wish:nth-child(1){background:#ffeab7}
+    .wish:nth-child(2){background:#d8ffd9}
+    .wish:nth-child(3){background:#ffd8ea}
+    .wish:nth-child(4){background:#dfd6ff}
+
+    .wish:hover { animation: bounce .6s; }
+
+    .float-balloon {
+      position: fixed;
+      bottom: -120px;
+      width: 60px;
+      z-index: 1;
+      animation: floatUp linear infinite;
+      pointer-events: none;
+    }
+
+    .balloon {
+      width: 60px;
+      height: 72px;
+      border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+      border: 3px solid var(--ink);
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      background: var(--clr, #ff99bb);
+      box-shadow: inset -6px -8px 0 #00000010;
+    }
+
+    .string {
+      width: 2px;
+      height: 70px;
+      margin: 0 auto;
+      background: #333;
+    }
+
+    .footer-ribbon {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      background: linear-gradient(90deg, #c6b1ff, #ffe0f1);
+      border-top: 4px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 14px;
+      font-weight: 700;
+      flex-wrap: wrap;
+    }
+
+    .tags {
+      font-size: clamp(1rem, 3.5vw, 1.65rem);
+      text-shadow: 1px 1px 0 #fff;
+    }
+
+    .bgm-btn {
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      background: #ffe780;
+      font-family: inherit;
+      font-weight: 700;
+      padding: 8px 12px;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 #0000001f;
+    }
+
+    @keyframes scan {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(calc(100% - 4px)); }
+    }
+
+    @keyframes flicker {
+      from { transform: translateX(-50%) scaleY(1) rotate(-2deg); }
+      to { transform: translateX(-50%) scaleY(.82) rotate(2deg); }
+    }
+
+    @keyframes smokeUp {
+      0% { opacity: 0.6; transform: translate(-50%, 0) scale(.8); }
+      100% { opacity: 0; transform: translate(-50%, -35px) scale(1.6); }
+    }
+
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      25% { transform: translateY(-7px) rotate(-2deg); }
+      50% { transform: translateY(-2px) rotate(2deg); }
+      75% { transform: translateY(-5px) rotate(-1deg); }
+    }
+
+    @keyframes bob {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(-120vh) rotate(7deg); opacity: .9; }
+    }
+
+    @media (max-width: 900px) {
+      .main-wrap { grid-template-columns: 1fr; }
+      .rainbow.right,.cloud-2 { display: none; }
+      .rainbow.left { left: -65px; top: 120px; transform: scale(.72); }
+      .cloud-1 { left: -30px; top: 184px; transform: scale(.8); }
+      .page { padding-bottom: 110px; }
+      .footer-ribbon { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header-banner">🎉 HBD FAERUZA AUKYA YASMIN! (YEAY! 23! 🎂)</div>
+
+    <div class="rainbow left"></div>
+    <div class="rainbow right"></div>
+
+    <div class="smile-cloud cloud-1"><div class="cloud-face">•ᴗ•</div></div>
+    <div class="smile-cloud cloud-2"><div class="cloud-face">˶ᵔ ᵕ ᵔ˶</div></div>
+
+    <section class="main-wrap">
+      <div class="camera-card">
+        <h2 class="panel-title">Scan Muka</h2>
+        <div class="retro-window">
+          <div class="window-head">
+            <span>📷 Cute Scanner</span>
+            <div class="window-buttons"><span></span><span></span><span></span></div>
+          </div>
+          <div class="video-shell" id="videoShell">
+            <video id="webcam" autoplay playsinline muted hidden></video>
+            <div class="avatar-fallback" id="avatarFallback">👧<br><small style="font-size:.9rem">Akses kamera belum aktif</small></div>
+            <div class="scan-line" id="scanLine"></div>
+          </div>
+        </div>
+        <button class="cute-btn" id="scanBtn">Scan Muka Dulu! 📸</button>
+        <p class="scan-loading" id="scanLoading"></p>
+        <div class="scan-stamp" id="scanStamp">100% LOLOS UMUR 23 &amp; MAKIN CANTIK! ✨</div>
+        <div class="permission-note" id="cameraNote">Izinkan kamera untuk pengalaman scan lebih seru ya 💖</div>
+      </div>
+
+      <div class="cake-card">
+        <h2 class="panel-title">Kue Ulang Tahun 🎂</h2>
+        <div class="cake-stage">
+          <div class="cake">
+            <div class="tier top">
+              <div class="icing"></div>
+              <div class="candles">
+                <div class="candle num"><span>2</span><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle num"><span>3</span><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+              </div>
+            </div>
+            <div class="tier bottom">
+              <div class="icing"></div>
+              <div class="candles" style="top:-36px; gap:20px;">
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="table"></div>
+        </div>
+        <button class="cute-btn" id="blowBtn">Tiup Lilin! (Fyuuu~ 💨)</button>
+        <button class="cute-btn" id="micBtn" style="background:linear-gradient(90deg,#c8ffe4,#cbe3ff)">Aktifkan Deteksi Tiupan Mic 🎙️</button>
+        <div class="permission-note" id="micNote">Mic opsional: izinkan mic lalu tiup untuk memadamkan otomatis.</div>
+        <div class="celebrate-text" id="celebrateText"></div>
+      </div>
+    </section>
+
+    <section class="wish-section">
+      <h3 class="wish-title">✨ Doa-Doa Lucu &amp; Harapan ✨</h3>
+      <div class="wish-cards">
+        <div class="wish">Semoga makin hits &amp; bersinar di usia 23!</div>
+        <div class="wish">Rezeki ngalir lancar kayak air terjun! 💸</div>
+        <div class="wish">Makin pintar, makin sukses, dan bahagia selalu! 🌸</div>
+        <div class="wish">Kompak terus dan impiannya tercapai semua!</div>
+      </div>
+    </section>
+  </div>
+
+  <div class="float-balloon" style="left:4%; animation-duration:16s; animation-delay:0s; --clr:#ff95ba;">
+    <div class="balloon" style="--clr:#ff95ba">◕‿◕</div><div class="string"></div>
+  </div>
+  <div class="float-balloon" style="left:12%; animation-duration:19s; animation-delay:3s; --clr:#ffd569;">
+    <div class="balloon" style="--clr:#ffd569">˶ᵔᵕᵔ˶</div><div class="string"></div>
+  </div>
+  <div class="float-balloon" style="left:82%; animation-duration:17s; animation-delay:1s; --clr:#8de6ff;">
+    <div class="balloon" style="--clr:#8de6ff">•ᴗ•</div><div class="string"></div>
+  </div>
+  <div class="float-balloon" style="left:90%; animation-duration:21s; animation-delay:5s; --clr:#d0b0ff;">
+    <div class="balloon" style="--clr:#d0b0ff">ʕ•ᴥ•ʔ</div><div class="string"></div>
+  </div>
+
+  <footer class="footer-ribbon">
+    <div>😊 🐣 🎀</div>
+    <div class="tags">#FAERUZA23 #BDAYVIBES</div>
+    <button class="bgm-btn" id="bgmBtn">▶️ Nyalakan BGM</button>
+  </footer>
+
+  <script>
+    const webcam = document.getElementById('webcam');
+    const avatarFallback = document.getElementById('avatarFallback');
+    const cameraNote = document.getElementById('cameraNote');
+    const scanBtn = document.getElementById('scanBtn');
+    const scanLine = document.getElementById('scanLine');
+    const scanLoading = document.getElementById('scanLoading');
+    const scanStamp = document.getElementById('scanStamp');
+
+    const blowBtn = document.getElementById('blowBtn');
+    const micBtn = document.getElementById('micBtn');
+    const micNote = document.getElementById('micNote');
+    const celebrateText = document.getElementById('celebrateText');
+    const flames = Array.from(document.querySelectorAll('.flame'));
+    const smokes = Array.from(document.querySelectorAll('.smoke'));
+    const bgmBtn = document.getElementById('bgmBtn');
+
+    let camStream;
+    let micStream;
+    let audioCtx;
+    let analyser;
+    let micDetectInterval;
+    let candlesOff = false;
+    let bgmInterval;
+    let bgmOn = false;
+
+    async function initCamera() {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        cameraNote.textContent = 'Browser ini belum mendukung kamera, pakai mode avatar lucu ya ✨';
+        return;
+      }
+      try {
+        camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+        webcam.srcObject = camStream;
+        webcam.hidden = false;
+        avatarFallback.hidden = true;
+        cameraNote.textContent = 'Kamera siap! Waktunya scan muka super gemoy 💖';
+      } catch (error) {
+        cameraNote.textContent = 'Kamera ditolak/terkunci. Tenang, avatar tetap bisa dipakai untuk scan 🎀';
+      }
+    }
+
+    function playChime() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const now = ctx.currentTime;
+      [523.25, 659.25, 783.99].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.07, now + 0.02 + i * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22 + i * 0.12);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now + i * 0.12);
+        osc.stop(now + i * 0.12 + 0.25);
+      });
+      setTimeout(() => ctx.close(), 700);
+    }
+
+    async function runScan() {
+      scanBtn.disabled = true;
+      scanStamp.style.display = 'none';
+      scanLoading.textContent = 'Mengecek kadar keimutan...';
+      scanLine.classList.add('active');
+
+      await new Promise(r => setTimeout(r, 1500));
+      scanLoading.textContent = 'Memverifikasi status umur 23...';
+      await new Promise(r => setTimeout(r, 1500));
+
+      scanLine.classList.remove('active');
+      scanLoading.textContent = 'Scan selesai!';
+      scanStamp.style.display = 'block';
+      playChime();
+      scanBtn.disabled = false;
+    }
+
+    function launchConfetti() {
+      const colors = ['#ff78b7','#ffd86f','#8dd7ff','#bda2ff','#9af0c5'];
+      const fire = (originX, originY) => {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          startVelocity: 55,
+          scalar: 1.1,
+          origin: { x: originX, y: originY },
+          colors
+        });
+      };
+      fire(0.2, 0.75);
+      fire(0.5, 0.2);
+      fire(0.8, 0.75);
+    }
+
+    function extinguishCandles() {
+      if (candlesOff) return;
+      candlesOff = true;
+      flames.forEach((flame, idx) => {
+        setTimeout(() => {
+          flame.classList.add('off');
+          smokes[idx].classList.add('show');
+        }, idx * 90);
+      });
+      celebrateText.textContent = 'Hooray! Happy 23rd Birthday, Faeruza! 🎉';
+      launchConfetti();
+      playChime();
+    }
+
+    async function enableMicBlowDetection() {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        micNote.textContent = 'Browser tidak mendukung mic. Pakai tombol Tiup Lilin saja ya ✨';
+        return;
+      }
+      try {
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 1024;
+        const source = audioCtx.createMediaStreamSource(micStream);
+        source.connect(analyser);
+
+        const data = new Uint8Array(analyser.fftSize);
+        micNote.textContent = 'Mic aktif! Coba tiup kuat 1-2 detik ke arah mic 🌬️';
+
+        if (micDetectInterval) clearInterval(micDetectInterval);
+        let loudFrames = 0;
+        micDetectInterval = setInterval(() => {
+          analyser.getByteTimeDomainData(data);
+          let sum = 0;
+          for (let i = 0; i < data.length; i++) {
+            const centered = data[i] - 128;
+            sum += centered * centered;
+          }
+          const rms = Math.sqrt(sum / data.length);
+          if (rms > 18) {
+            loudFrames++;
+          } else {
+            loudFrames = Math.max(0, loudFrames - 1);
+          }
+          if (loudFrames > 8 && !candlesOff) {
+            micNote.textContent = 'Tiupan terdeteksi! Lilin padam~ 🕯️';
+            extinguishCandles();
+            clearInterval(micDetectInterval);
+          }
+        }, 120);
+      } catch (error) {
+        micNote.textContent = 'Izin mic belum diberikan. Tenang, gunakan tombol Tiup Lilin ya 💗';
+      }
+    }
+
+    function makeBgmSynth() {
+      const notes = [523.25, 659.25, 783.99, 659.25, 587.33, 698.46, 880, 783.99];
+      let i = 0;
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      bgmInterval = setInterval(() => {
+        const freq = notes[i % notes.length];
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.025, ctx.currentTime + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.32);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.33);
+        i++;
+      }, 340);
+      return ctx;
+    }
+
+    let bgmCtx = null;
+    function toggleBgm() {
+      if (!bgmOn) {
+        bgmCtx = makeBgmSynth();
+        bgmOn = true;
+        bgmBtn.textContent = '⏸️ Matikan BGM';
+      } else {
+        bgmOn = false;
+        bgmBtn.textContent = '▶️ Nyalakan BGM';
+        clearInterval(bgmInterval);
+        if (bgmCtx) bgmCtx.close();
+      }
+    }
+
+    scanBtn.addEventListener('click', runScan);
+    blowBtn.addEventListener('click', extinguishCandles);
+    micBtn.addEventListener('click', enableMicBlowDetection);
+    bgmBtn.addEventListener('click', toggleBgm);
+
+    window.addEventListener('beforeunload', () => {
+      camStream?.getTracks().forEach(t => t.stop());
+      micStream?.getTracks().forEach(t => t.stop());
+      clearInterval(micDetectInterval);
+      clearInterval(bgmInterval);
+      if (bgmCtx) bgmCtx.close();
+    });
+
+    initCamera();
+  </script>
+</body>
+</html>
