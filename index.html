@@ -373,7 +373,7 @@
       margin: 0 auto;
       z-index: 2;
       display: flex;
-      flex-direction: column;
+      flex-direction: column-reverse;
       align-items: center;
     }
 
@@ -390,15 +390,14 @@
       width: 55%;
       height: 80px;
       border-radius: 18px;
-      z-index: 5;
+      margin-bottom: -15px;
     }
 
     .tier.middle {
       width: 75%;
       height: 90px;
       border-radius: 18px;
-      z-index: 4;
-      margin-top: -15px;
+      margin-bottom: -15px;
       background: linear-gradient(180deg, #ffe86f, #ffcc00);
       box-shadow: inset 0 -12px 0 #e6b800, 0 8px 10px rgba(0,0,0,0.1);
     }
@@ -407,8 +406,6 @@
       width: 100%;
       height: 110px;
       border-radius: 18px;
-      z-index: 3;
-      margin-top: -15px;
     }
 
     .icing {
@@ -446,18 +443,20 @@
 
     .tier.middle .candles.sub-candles {
       width: 85%;
+      margin: 0 auto;
       justify-content: space-between;
       gap: 0;
       top: -20px;
-      z-index: -1;
+      z-index: 10;
     }
 
     .tier.bottom .candles.sub-candles {
       width: 90%;
+      margin: 0 auto;
       justify-content: space-between;
       gap: 0;
       top: -20px;
-      z-index: -1;
+      z-index: 10;
     }
 
     .candle {
@@ -739,11 +738,17 @@
         <div class="cake-stage zoomable-target" id="cakeStage" role="button" tabindex="0" aria-label="Perbesar kue">
           <div class="cake-glow"></div>
           <div class="cake">
-            <div class="tier top">
+            <div class="tier bottom">
               <div class="icing"></div>
-              <div class="candles">
-                <div class="candle num"><span>2</span><div class="flame"></div><div class="smoke"></div></div>
-                <div class="candle num"><span>3</span><div class="flame"></div><div class="smoke"></div></div>
+              <div class="candles sub-candles">
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
               </div>
             </div>
             <div class="tier middle">
@@ -757,17 +762,11 @@
                 <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
               </div>
             </div>
-            <div class="tier bottom">
+            <div class="tier top">
               <div class="icing"></div>
-              <div class="candles sub-candles">
-                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
-                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
-                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
-                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
-                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
-                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
-                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
-                <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+              <div class="candles">
+                <div class="candle num"><span>2</span><div class="flame"></div><div class="smoke"></div></div>
+                <div class="candle num"><span>3</span><div class="flame"></div><div class="smoke"></div></div>
               </div>
             </div>
           </div>
