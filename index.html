@@ -224,7 +224,7 @@
 
     .camera-toolbar {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.2fr 1fr 1fr;
       gap: 8px;
       margin-top: 10px;
     }
@@ -631,6 +631,7 @@
       .footer-ribbon { justify-content: center; }
       .cake-stage { min-height: 270px; }
       .zoomable-target.is-zoomed { width: 96vw; }
+      .camera-toolbar { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 600px) {
@@ -678,11 +679,16 @@
             <option value="triple">3 Lapis Story</option>
             <option value="duo">Duo Frame Party</option>
           </select>
+          <select class="layout-select" id="themeSelect" aria-label="Pilih tema twibbon">
+            <option value="candy">Candy Cute</option>
+            <option value="royal">Royal Gold</option>
+            <option value="men">Men Birthday Special</option>
+          </select>
         </div>
         <div class="camera-status">
           <p class="scan-loading" id="scanLoading"></p>
           <div class="scan-stamp" id="scanStamp">100% LOLOS UMUR 23 &amp; MAKIN CANTIK! ✨</div>
-          <div class="permission-note" id="cameraNote">Aktifkan kamera lalu pilih layout twibbon favorit 💖</div>
+          <div class="permission-note" id="cameraNote">Aktifkan kamera lalu pilih layout &amp; tema twibbon favorit 💖</div>
         </div>
         <div class="photo-strip" id="photoStrip"></div>
         <canvas id="captureCanvas" hidden></canvas>
@@ -753,6 +759,7 @@
     const zoomCameraBtn = document.getElementById('zoomCameraBtn');
     const zoomCakeBtn = document.getElementById('zoomCakeBtn');
     const layoutSelect = document.getElementById('layoutSelect');
+    const themeSelect = document.getElementById('themeSelect');
     const photoStrip = document.getElementById('photoStrip');
     const captureCanvas = document.getElementById('captureCanvas');
     const videoShell = document.getElementById('videoShell');
@@ -810,7 +817,7 @@
     function savePhotoFile(src) {
       const link = document.createElement('a');
       link.href = src;
-      link.download = `twibbon-faeruza-${layoutSelect.value}-${Date.now()}.png`;
+      link.download = `twibbon-faeruza-${layoutSelect.value}-${themeSelect.value}-${Date.now()}.png`;
       link.click();
     }
 
@@ -870,7 +877,41 @@
       ctx.stroke();
     }
 
-    function drawBadgeText(ctx, width, height, text) {
+    function getThemeConfig(theme) {
+      if (theme === 'royal') {
+        return {
+          stops: ['#fff3cc', '#ffdba1', '#dbe9ff'],
+          bubble: '#ffffff50',
+          title: '#5d3b00',
+          badge: '#8c5b00',
+          border: '#b57a00',
+          sticker: '👑',
+          subtitle: 'Royal Gold Birthday'
+        };
+      }
+      if (theme === 'men') {
+        return {
+          stops: ['#d9ecff', '#c9d2ff', '#c3ffd8'],
+          bubble: '#ffffff45',
+          title: '#133f74',
+          badge: '#265aa8',
+          border: '#1b3e70',
+          sticker: '🎯',
+          subtitle: 'Men Birthday Special'
+        };
+      }
+      return {
+        stops: ['#ffe3f2', '#fff6d9', '#dff2ff'],
+        bubble: '#ffffff80',
+        title: '#222',
+        badge: '#ff4e95',
+        border: '#ff90c2',
+        sticker: '🎀',
+        subtitle: 'Candy Cute Birthday'
+      };
+    }
+
+    function drawBadgeText(ctx, width, height, text, themeConfig) {
       ctx.fillStyle = '#fffef6';
       roundRect(ctx, 70, height - 170, width - 140, 90, 22);
       ctx.fill();
@@ -878,20 +919,20 @@
       ctx.strokeStyle = '#222';
       roundRect(ctx, 70, height - 170, width - 140, 90, 22);
       ctx.stroke();
-      ctx.fillStyle = '#ff4e95';
+      ctx.fillStyle = themeConfig.badge;
       ctx.font = '700 44px Fredoka';
       ctx.textAlign = 'center';
       ctx.fillText(text, width / 2, height - 112);
     }
 
-    function drawTwibbonBackground(ctx, width, height) {
+    function drawTwibbonBackground(ctx, width, height, themeConfig) {
       const bg = ctx.createLinearGradient(0, 0, width, height);
-      bg.addColorStop(0, '#ffe3f2');
-      bg.addColorStop(0.5, '#fff6d9');
-      bg.addColorStop(1, '#dff2ff');
+      bg.addColorStop(0, themeConfig.stops[0]);
+      bg.addColorStop(0.5, themeConfig.stops[1]);
+      bg.addColorStop(1, themeConfig.stops[2]);
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, width, height);
-      ctx.fillStyle = '#ffffff80';
+      ctx.fillStyle = themeConfig.bubble;
       for (let i = 0; i < 14; i++) {
         const x = (i * 121) % width;
         const y = (i * 197) % height;
@@ -901,32 +942,51 @@
       }
     }
 
+    function drawTwibbonDecor(ctx, width, height, themeConfig) {
+      ctx.lineWidth = 14;
+      ctx.strokeStyle = themeConfig.border;
+      roundRect(ctx, 18, 18, width - 36, height - 36, 38);
+      ctx.stroke();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#222';
+      roundRect(ctx, 26, 26, width - 52, height - 52, 32);
+      ctx.stroke();
+
+      ctx.font = '700 58px Fredoka';
+      ctx.fillStyle = themeConfig.title;
+      ctx.textAlign = 'center';
+      ctx.fillText(`${themeConfig.sticker} ${themeConfig.subtitle} ${themeConfig.sticker}`, width / 2, 132);
+    }
+
     function capturePhotoBooth() {
       const layout = layoutSelect.value;
+      const theme = themeSelect.value;
+      const themeConfig = getThemeConfig(theme);
       const width = 1080;
       const height = 1350;
       captureCanvas.width = width;
       captureCanvas.height = height;
       const ctx = captureCanvas.getContext('2d');
 
-      drawTwibbonBackground(ctx, width, height);
-      ctx.fillStyle = '#222';
+      drawTwibbonBackground(ctx, width, height, themeConfig);
+      drawTwibbonDecor(ctx, width, height, themeConfig);
+      ctx.fillStyle = themeConfig.title;
       ctx.font = '700 50px Fredoka';
       ctx.textAlign = 'center';
-      ctx.fillText('HAPPY BIRTHDAY FAERUZA 🎉', width / 2, 86);
+      ctx.fillText('HAPPY BIRTHDAY FAERUZA 🎉', width / 2, 208);
 
       if (layout === 'triple') {
-        drawSourceFrame(ctx, 170, 160, 740, 300);
-        drawSourceFrame(ctx, 130, 500, 820, 300);
-        drawSourceFrame(ctx, 170, 840, 740, 300);
-        drawBadgeText(ctx, width, height, '3 Lapis Celebration ✨');
+        drawSourceFrame(ctx, 170, 240, 740, 260);
+        drawSourceFrame(ctx, 130, 530, 820, 260);
+        drawSourceFrame(ctx, 170, 820, 740, 260);
+        drawBadgeText(ctx, width, height, '3 Lapis Celebration ✨', themeConfig);
       } else if (layout === 'duo') {
-        drawSourceFrame(ctx, 80, 180, 440, 760);
-        drawSourceFrame(ctx, 560, 180, 440, 760);
-        drawBadgeText(ctx, width, height, 'Duo Frame Party 💕');
+        drawSourceFrame(ctx, 80, 260, 440, 700);
+        drawSourceFrame(ctx, 560, 260, 440, 700);
+        drawBadgeText(ctx, width, height, 'Duo Frame Party 💕', themeConfig);
       } else {
-        drawSourceFrame(ctx, 130, 170, 820, 930);
-        drawBadgeText(ctx, width, height, 'Classic Twibbon 🌟');
+        drawSourceFrame(ctx, 130, 250, 820, 850);
+        drawBadgeText(ctx, width, height, 'Classic Twibbon 🌟', themeConfig);
       }
 
       ctx.fillStyle = '#222';
@@ -949,10 +1009,16 @@
         webcam.srcObject = camStream;
         webcam.hidden = false;
         avatarFallback.hidden = true;
-        cameraNote.textContent = 'Kamera siap! Pilih layout twibbon lalu ambil foto 💖';
+        cameraNote.textContent = 'Kamera siap! Pilih layout + tema twibbon lalu ambil foto 💖';
       } catch (error) {
         cameraNote.textContent = 'Kamera ditolak/terkunci. Tenang, avatar tetap bisa dipakai untuk scan 🎀';
       }
+    }
+
+    function updateTwibbonHint() {
+      const layoutLabel = layoutSelect.options[layoutSelect.selectedIndex]?.textContent || 'layout';
+      const themeLabel = themeSelect.options[themeSelect.selectedIndex]?.textContent || 'tema';
+      cameraNote.textContent = `Siap bikin twibbon: ${layoutLabel} • ${themeLabel} 💝`;
     }
 
     function playChime() {
@@ -1104,6 +1170,8 @@
     captureBtn.addEventListener('click', capturePhotoBooth);
     zoomCameraBtn.addEventListener('click', () => toggleZoom(videoShell));
     zoomCakeBtn.addEventListener('click', () => toggleZoom(cakeStage));
+    layoutSelect.addEventListener('change', updateTwibbonHint);
+    themeSelect.addEventListener('change', updateTwibbonHint);
     blowBtn.addEventListener('click', extinguishCandles);
     micBtn.addEventListener('click', enableMicBlowDetection);
     bgmBtn.addEventListener('click', toggleBgm);
@@ -1138,6 +1206,7 @@
 
     initCamera();
     syncZoomButtons();
+    updateTwibbonHint();
   </script>
 </body>
 </html>
